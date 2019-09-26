@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -17,25 +15,20 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+// the fragment initialization parameters
+private const val VIEW_MODEL_PARAM = "viewModel"
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [Report.OnFragmentInteractionListener] interface
+ * [ReportFragment.OnReportInteractionListener] interface
  * to handle interaction events.
- * Use the [Report.newInstance] factory method to
+ * Use the [ReportFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Report : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
-    private var viewModel: DetectorViewModel? = null
+class ReportFragment : Fragment() {
+    private var callback: OnReportInteractionListener? = null
+
     private var list4Report: List<ResultWiFi>? = null
 
     private lateinit var viewFragment: View
@@ -43,8 +36,7 @@ class Report : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            list4Report = it.getParcelableArrayList(VIEW_MODEL_PARAM)
         }
     }
 
@@ -52,11 +44,6 @@ class Report : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         viewFragment = inflater.inflate(R.layout.fragment_report, container, false)
-
-        viewModel = ViewModelProviders.of(this).get(DetectorViewModel::class.java)
-        viewModel!!.getResultScanLiveData().observe(this, Observer {
-            list4Report = it
-        })
 
         val sendButton = viewFragment.findViewById<Button>(R.id.sednReport)
         val gson = Gson()
@@ -79,23 +66,22 @@ class Report : Fragment() {
         return viewFragment
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+    fun setOnReportListener(callback: OnReportInteractionListener) {
+        this.callback = callback
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        /* if (context is OnFragmentInteractionListener) {
-             listener = context
+        if (context is OnReportInteractionListener) {
+            callback = context
          } else {
-             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-         }*/
+            throw RuntimeException("$context must implement OnReportInteractionListener")
+        }
     }
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
+        callback = null
     }
 
     /**
@@ -109,8 +95,7 @@ class Report : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+    interface OnReportInteractionListener {
         fun onFragmentInteraction(uri: Uri)
     }
 
@@ -119,17 +104,15 @@ class Report : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Report.
+         * @param data
+         * @return A new instance of fragment ReportFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-                Report().apply {
+        fun newInstance(data: ArrayList<ResultWiFi>) =
+                ReportFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
+                        putParcelableArrayList(VIEW_MODEL_PARAM, data)
                     }
                 }
     }

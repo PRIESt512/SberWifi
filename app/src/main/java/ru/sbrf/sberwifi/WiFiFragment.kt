@@ -1,5 +1,6 @@
 package ru.sbrf.sberwifi
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -21,16 +22,18 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [WiFi.OnFragmentInteractionListener] interface
+ * [WiFiFragment.OnWifiInteractionListener] interface
  * to handle interaction events.
- * Use the [WiFi.newInstance] factory method to
+ * Use the [WiFiFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class WiFi : Fragment() {
+class WiFiFragment : Fragment() {
+    lateinit var callback: OnWifiInteractionListener
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnWifiInteractionListener? = null
     private var list: ParallaxScrollListView? = null
     private var viewModel: DetectorViewModel? = null
 
@@ -44,6 +47,7 @@ class WiFi : Fragment() {
         }
     }
 
+    @SuppressLint("InflateParams")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -83,6 +87,10 @@ class WiFi : Fragment() {
         }
     }
 
+    fun setOnWiFiListener(callback: OnWifiInteractionListener) {
+        this.callback = callback
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
@@ -90,10 +98,10 @@ class WiFi : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        /* if (context is OnFragmentInteractionListener) {
+        /* if (context is OnReportInteractionListener) {
              listener = context
          } else {
-             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+             throw RuntimeException(context.toString() + " must implement OnReportInteractionListener")
          }*/
     }
 
@@ -113,7 +121,7 @@ class WiFi : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
+    interface OnWifiInteractionListener {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
@@ -130,7 +138,7 @@ class WiFi : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-                WiFi().apply {
+                WiFiFragment().apply {
                     arguments = Bundle().apply {
                         putString(ARG_PARAM1, param1)
                         putString(ARG_PARAM2, param2)
