@@ -13,11 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+// the fragment initialization parameters
+private const val VIEW_MODEL_PARAM = "listData"
 
 /**
  * A simple [Fragment] subclass.
@@ -28,22 +25,17 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class WiFiFragment : Fragment() {
-    lateinit var callback: OnWifiInteractionListener
+    private var callback: OnWifiInteractionListener? = null
 
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private var listener: OnWifiInteractionListener? = null
     private var list: ParallaxScrollListView? = null
     private var viewModel: DetectorViewModel? = null
 
-    private lateinit var viewFragment: View
+    private var list4Report: List<ResultWiFi>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            list4Report = it.getParcelableArrayList(VIEW_MODEL_PARAM)
         }
     }
 
@@ -51,7 +43,7 @@ class WiFiFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        viewFragment = inflater.inflate(R.layout.fragment_wifi, container, false)
+        val viewFragment = inflater.inflate(R.layout.fragment_wifi, container, false)
 
         list = viewFragment.findViewById(R.id.layout_listwifi)
         list?.setZoomRatio(ParallaxScrollListView.ZOOM_X2)
@@ -81,49 +73,32 @@ class WiFiFragment : Fragment() {
         return viewFragment
     }
 
-    private class ItemListWifi(val SSID: String, val level: Int) {
-        override fun toString(): String {
-            return String.format("SSID: %s, Level: %sdBm", SSID, level)
-        }
-    }
-
     fun setOnWiFiListener(callback: OnWifiInteractionListener) {
         this.callback = callback
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        /* if (context is OnReportInteractionListener) {
-             listener = context
-         } else {
-             throw RuntimeException(context.toString() + " must implement OnReportInteractionListener")
-         }*/
+        if (context is OnWifiInteractionListener) {
+            callback = context
+        } else {
+            throw RuntimeException("$context must implement OnReportInteractionListener")
+        }
     }
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
+        callback = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
     interface OnWifiInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
+    }
+
+    private class ItemListWifi(val SSID: String, val level: Int) {
+        override fun toString(): String {
+            return String.format("SSID: %s, Level: %sdBm", SSID, level)
+        }
     }
 
     companion object {
@@ -131,17 +106,14 @@ class WiFiFragment : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
+         * @param data list data scan WiFi
          * @return A new instance of fragment Wifi.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(data: ArrayList<ResultWiFi>) =
                 WiFiFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
+                        putParcelableArrayList(VIEW_MODEL_PARAM, data)
                     }
                 }
     }

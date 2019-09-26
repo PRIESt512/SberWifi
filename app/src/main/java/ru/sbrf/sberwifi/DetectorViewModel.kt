@@ -6,6 +6,9 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 
+/**
+ * Перехватчик событий обновления данных по результатам сканирования WiFi-сети
+ */
 public class DetectorViewModel(application: Application) : AndroidViewModel(application) {
 
     private val wifiScan: WiFiScanLiveData = WiFiScanLiveData(application.applicationContext)

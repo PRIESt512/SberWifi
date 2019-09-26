@@ -14,9 +14,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
-
 // the fragment initialization parameters
-private const val VIEW_MODEL_PARAM = "viewModel"
+private const val VIEW_MODEL_PARAM = "listData"
 
 /**
  * A simple [Fragment] subclass.
@@ -31,8 +30,6 @@ class ReportFragment : Fragment() {
 
     private var list4Report: List<ResultWiFi>? = null
 
-    private lateinit var viewFragment: View
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -43,7 +40,7 @@ class ReportFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        viewFragment = inflater.inflate(R.layout.fragment_report, container, false)
+        val viewFragment = inflater.inflate(R.layout.fragment_report, container, false)
 
         val sendButton = viewFragment.findViewById<Button>(R.id.sednReport)
         val gson = Gson()
@@ -84,17 +81,6 @@ class ReportFragment : Fragment() {
         callback = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
     interface OnReportInteractionListener {
         fun onFragmentInteraction(uri: Uri)
     }
@@ -104,10 +90,9 @@ class ReportFragment : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param data
+         * @param data list data scan WiFi
          * @return A new instance of fragment ReportFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(data: ArrayList<ResultWiFi>) =
                 ReportFragment().apply {

@@ -20,14 +20,14 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initData()
+        subscribeUpdateScanData()
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         bottomNavigationView.setOnNavigationItemSelectedListener {
             val selectedFragment: Fragment? = when (it.itemId) {
                 R.id.navigation_menu -> {
-                    val fragment = WiFiFragment.newInstance("", "")
+                    val fragment = WiFiFragment.newInstance(dataScan as ArrayList<ResultWiFi>)
                     onActivityAttachFragment(fragment)
                     fragment
                 }
@@ -46,12 +46,13 @@ class MainActivity : AppCompatActivity(),
             true
         }
 
+        //по умолчанию отображаем фрагмент WiFi
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.frame_layout, WiFiFragment.newInstance("", ""))
+        transaction.replace(R.id.frame_layout, WiFiFragment.newInstance(dataScan as ArrayList<ResultWiFi>))
         transaction.commit()
     }
 
-    private fun initData() {
+    private fun subscribeUpdateScanData() {
         viewModel = ViewModelProviders.of(this).get(DetectorViewModel::class.java)
 
         viewModel.getResultScanLiveData().observe(this, Observer {
@@ -68,26 +69,4 @@ class MainActivity : AppCompatActivity(),
 
     override fun onFragmentInteraction(uri: Uri) {
     }
-
-    /* class DataSource(val resultScan: List<ResultWiFi>) : Parcelable {
-
-         override fun writeToParcel(parcel: Parcel, flags: Int) {
-             parcel.writeParcelableList(resultScan, flags)
-         }
-
-         override fun describeContents(): Int {
-             return 0
-         }
-
-         companion object CREATOR : Parcelable.Creator<DataSource> {
-             override fun createFromParcel(parcel: Parcel): DataSource {
-                 val resultWiFi = parcel.readParcelableList(listOf(), MainActivity::class.java.classLoader) as List<ResultWiFi>
-                 return DataSource(resultWiFi)
-             }
-
-             override fun newArray(size: Int): Array<DataSource?> {
-                 return arrayOfNulls(size)
-             }
-         }
-     }*/
 }

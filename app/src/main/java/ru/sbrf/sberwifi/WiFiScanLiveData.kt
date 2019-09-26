@@ -8,12 +8,16 @@ import android.net.wifi.WifiManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 
+/**
+ * Класс-источник данных результатов сканирования WiFi-данных по event-системы
+ */
 public class WiFiScanLiveData(private val context: Context) : LiveData<List<ResultWiFi>>() {
     private var broadcastReceiver: BroadcastReceiver? = null
 
     private fun prepareReceiver(context: Context) {
         val wifi = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
+        //подписываемся на широковещательные события результатов сканирования WiFI-сети
         val wifiScanReceiver = object : BroadcastReceiver() {
 
             override fun onReceive(context: Context, intent: Intent) {
