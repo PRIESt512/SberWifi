@@ -7,4 +7,11 @@
 
     <string name="item_menu_main">Меню</string>
     <string name="item_menu_log">Отчет</string>
+
+    <!-- wifi band start -->
+    <string name="wifi_band_title" translatable="false">"2.4/5 GHz"</string>
+    <string name="wifi_band_2ghz" translatable="false">"2.4 GHz"</string>
+    <string name="wifi_band_5ghz" translatable="false">"5 GHz"</string>
+    <!-- wifi band end -->
+
 </resources>

@@ -2,7 +2,6 @@ package ru.sbrf.sberwifi
 
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.collections4.Transformer
-import org.apache.commons.lang3.LocaleUtils
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
