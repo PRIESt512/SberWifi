@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import ru.sbrf.sberwifi.fragment.ReportFragment
+import ru.sbrf.sberwifi.fragment.WiFiFragment
+import ru.sbrf.sberwifi.livemodel.DetectorViewModel
 
 @Suppress("CAST_NEVER_SUCCEEDS")
 class MainActivity : AppCompatActivity(),
