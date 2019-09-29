@@ -74,7 +74,7 @@ class WiFiData(private val wiFiDetails: List<WiFiDetail>, val wiFiConnection: Wi
         }
     }
 
-    private inner class Transform constructor() : Transformer<WiFiDetail, WiFiDetail> {
+    private inner class Transform : Transformer<WiFiDetail, WiFiDetail> {
         private val connection: WiFiDetail
         private val vendorService: VendorService
 

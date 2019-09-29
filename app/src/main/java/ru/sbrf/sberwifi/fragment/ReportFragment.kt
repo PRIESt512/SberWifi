@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -15,6 +17,8 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.ResultWiFi
+import ru.sbrf.sberwifi.livemodel.DetectorViewModel
+import ru.sbrf.sberwifi.wifi.model.WiFiData
 
 // the fragment initialization parameters
 private const val VIEW_MODEL_PARAM = "listData"
@@ -30,12 +34,12 @@ private const val VIEW_MODEL_PARAM = "listData"
 class ReportFragment : Fragment() {
     private var callback: OnReportInteractionListener? = null
 
-    private var list4Report: List<ResultWiFi>? = null
+    private lateinit var list4Report: WiFiData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            list4Report = it.getParcelableArrayList(VIEW_MODEL_PARAM)
+            //list4Report = it.getParcelableArrayList(VIEW_MODEL_PARAM)
         }
     }
 
@@ -47,6 +51,12 @@ class ReportFragment : Fragment() {
         val sendButton = viewFragment.findViewById<Button>(R.id.sednReport)
         val gson = Gson()
         val client = OkHttpClient()
+
+        val viewModel = ViewModelProviders.of(this).get(DetectorViewModel::class.java)
+
+        viewModel.getResultScanLiveData().observe(this, Observer {
+            list4Report = it
+        })
 
         sendButton.setOnClickListener {
             when {

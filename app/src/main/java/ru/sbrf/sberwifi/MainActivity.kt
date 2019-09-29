@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(),
                     fragment
                 }
                 R.id.navigation_report -> {
-                    val fragment = ReportFragment.newInstance(dataScan as ArrayList<ResultWiFi>)
+                    val fragment = ReportFragment.newInstance()
                     onActivityAttachFragment(fragment)
                     fragment
                 }
