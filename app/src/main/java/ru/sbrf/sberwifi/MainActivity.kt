@@ -10,6 +10,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.sbrf.sberwifi.fragment.ReportFragment
 import ru.sbrf.sberwifi.fragment.WiFiFragment
 import ru.sbrf.sberwifi.livemodel.DetectorViewModel
+import ru.sbrf.sberwifi.wifi.model.WiFiData
 
 @Suppress("CAST_NEVER_SUCCEEDS")
 class MainActivity : AppCompatActivity(),
@@ -18,7 +19,7 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var viewModel: DetectorViewModel
 
-    private lateinit var dataScan: List<ResultWiFi>
+    private lateinit var dataScan: WiFiData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity(),
         bottomNavigationView.setOnNavigationItemSelectedListener {
             val selectedFragment: Fragment? = when (it.itemId) {
                 R.id.navigation_menu -> {
-                    val fragment = WiFiFragment.newInstance(dataScan as ArrayList<ResultWiFi>)
+                    val fragment = WiFiFragment.newInstance()
                     onActivityAttachFragment(fragment)
                     fragment
                 }
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity(),
 
         //по умолчанию отображаем фрагмент WiFi
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.frame_layout, WiFiFragment.newInstance(dataScan as ArrayList<ResultWiFi>))
+        transaction.replace(R.id.frame_layout, WiFiFragment.newInstance())
         transaction.commit()
     }
 

@@ -19,7 +19,7 @@ class WiFiData(private val wiFiDetails: List<WiFiDetail>, val wiFiConnection: Wi
     @JvmOverloads
     fun getWiFiDetails(predicate: Predicate<WiFiDetail>, sortBy: SortBy, groupBy: GroupBy = GroupBy.NONE): List<WiFiDetail> {
         var results = getWiFiDetails(predicate)
-        if (!results.isEmpty() && !GroupBy.NONE.equals(groupBy)) {
+        if (results.isNotEmpty() && GroupBy.NONE != groupBy) {
             results = sortAndGroup(results, sortBy, groupBy)
         }
         Collections.sort(results, sortBy.comparator())

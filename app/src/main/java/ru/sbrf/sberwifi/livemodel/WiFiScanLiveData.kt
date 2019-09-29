@@ -4,15 +4,16 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.wifi.ScanResult
+import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.util.Log
 import androidx.lifecycle.LiveData
-import ru.sbrf.sberwifi.ResultWiFi
 
 /**
  * Класс-источник данных результатов сканирования WiFi-данных по event-системы
  */
-public class WiFiScanLiveData(private val context: Context) : LiveData<List<ResultWiFi>>() {
+public class WiFiScanLiveData(private val context: Context) : LiveData<WiFiScanLiveData.WiFiScan>() {
     private var broadcastReceiver: BroadcastReceiver? = null
 
     private fun prepareReceiver(context: Context) {
@@ -51,12 +52,11 @@ public class WiFiScanLiveData(private val context: Context) : LiveData<List<Resu
 
     private fun scanSuccess(wifiManager: WifiManager) {
         val results = wifiManager.scanResults
+        val wifiInfo = wifiManager.connectionInfo
 
-        val listWiFi = ArrayList<ResultWiFi>()
-        for (item in results) {
-            listWiFi.add(ResultWiFi(item))
-        }
-        value = listWiFi
+        val wiFiScan = WiFiScan(results, wifiInfo)
+
+        value = wiFiScan
     }
 
     private fun scanFailure(wifiManager: WifiManager) {
@@ -64,4 +64,6 @@ public class WiFiScanLiveData(private val context: Context) : LiveData<List<Resu
         // consider using old scan results: these are the OLD results!
         val results = wifiManager.scanResults
     }
+
+    public class WiFiScan(val scanResult: List<ScanResult>, val wifiInfo: WifiInfo)
 }

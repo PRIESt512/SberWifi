@@ -73,7 +73,7 @@ class ReportFragment : Fragment() {
         super.onAttach(context)
         if (context is OnReportInteractionListener) {
             callback = context
-         } else {
+        } else {
             throw RuntimeException("$context must implement OnReportInteractionListener")
         }
     }
@@ -102,5 +102,8 @@ class ReportFragment : Fragment() {
                         putParcelableArrayList(VIEW_MODEL_PARAM, data)
                     }
                 }
+
+        @JvmStatic
+        fun newInstance() = ReportFragment()
     }
 }

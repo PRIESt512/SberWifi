@@ -16,6 +16,7 @@ import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.ResultWiFi
 import ru.sbrf.sberwifi.livemodel.DetectorViewModel
 import ru.sbrf.sberwifi.view.ParallaxScrollListView
+import ru.sbrf.sberwifi.wifi.model.WiFiData
 
 // the fragment initialization parameters
 private const val VIEW_MODEL_PARAM = "listData"
@@ -63,8 +64,8 @@ class WiFiFragment : Fragment() {
         viewModel!!.getResultScanLiveData().observe(this, Observer {
             val listWiFi = ArrayList<ItemListWifi>()
 
-            for (item in it) {
-                listWiFi.add(ItemListWifi(item.scan.SSID, item.scan.level))
+            for (item in it.getWiFiDetails()) {
+                listWiFi.add(ItemListWifi(item.ssid, item.wiFiSignal.level))
             }
 
             val adapter = ArrayAdapter(this.context!!,
@@ -114,11 +115,14 @@ class WiFiFragment : Fragment() {
          * @return A new instance of fragment Wifi.
          */
         @JvmStatic
-        fun newInstance(data: ArrayList<ResultWiFi>) =
+        fun newInstance(data: WiFiData) =
                 WiFiFragment().apply {
                     arguments = Bundle().apply {
-                        putParcelableArrayList(VIEW_MODEL_PARAM, data)
+                        //putParcelable(VIEW_MODEL_PARAM, data)
                     }
                 }
+
+        @JvmStatic
+        fun newInstance() = WiFiFragment()
     }
 }
