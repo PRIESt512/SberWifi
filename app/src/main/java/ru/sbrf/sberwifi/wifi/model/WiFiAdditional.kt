@@ -1,8 +1,10 @@
 package ru.sbrf.sberwifi.wifi.model
 
+import kotlinx.serialization.Serializable
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.ToStringBuilder
 
+@Serializable
 class WiFiAdditional @JvmOverloads constructor(val vendorName: String, val wiFiConnection: WiFiConnection = WiFiConnection.EMPTY) {
 
     override fun toString(): String {

@@ -2,6 +2,8 @@ package ru.sbrf.sberwifi.livemodel
 
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiInfo
+import android.net.wifi.WifiInfo.LINK_SPEED_UNITS
+import android.net.wifi.WifiInfo.LINK_SPEED_UNKNOWN
 import org.apache.commons.collections4.CollectionUtils
 import ru.sbrf.sberwifi.util.EnumUtils
 import ru.sbrf.sberwifi.wifi.band.WiFiWidth
@@ -17,7 +19,15 @@ internal class Transformer {
                 WiFiUtils.convertSSID(wifiInfo.ssid),
                 wifiInfo.bssid,
                 WiFiUtils.convertIpAddress(wifiInfo.ipAddress),
-                wifiInfo.linkSpeed)
+                transformLinkSpeedUnits(wifiInfo.linkSpeed)/*,
+                transformLinkSpeedUnits(wifiInfo.txLinkSpeedMbps),
+                transformLinkSpeedUnits(wifiInfo.rxLinkSpeedMbps)*/)
+    }
+
+    private fun transformLinkSpeedUnits(value: Int): String {
+        return if (value == LINK_SPEED_UNKNOWN) {
+            "LINK_SPEED_UNKNOWN"
+        } else "$value $LINK_SPEED_UNITS"
     }
 
     private fun transformScanResult(scanResult: List<ScanResult>): List<WiFiDetail> {

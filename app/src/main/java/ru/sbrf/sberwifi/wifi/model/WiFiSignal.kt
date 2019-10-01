@@ -1,5 +1,6 @@
 package ru.sbrf.sberwifi.wifi.model
 
+import kotlinx.serialization.Serializable
 import org.apache.commons.lang3.builder.EqualsBuilder
 import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.apache.commons.lang3.builder.ToStringBuilder
@@ -10,43 +11,40 @@ import ru.sbrf.sberwifi.wifi.band.WiFiChannel
 import ru.sbrf.sberwifi.wifi.band.WiFiWidth
 import java.util.*
 
+@Serializable
 class WiFiSignal(val primaryFrequency: Int, val centerFrequency: Int, val wiFiWidth: WiFiWidth, val level: Int, val is80211mc: Boolean) {
-    val wiFiBand: WiFiBand
+    private val wiFiBand: WiFiBand = EnumUtils.find(WiFiBand::class.java, FrequencyPredicate(primaryFrequency), WiFiBand.GHZ2)
 
-    val frequencyStart: Int
-        get() = centerFrequency - wiFiWidth.frequencyWidthHalf
+    private val frequencyStart: Int = centerFrequency - wiFiWidth.frequencyWidthHalf
 
-    val frequencyEnd: Int
-        get() = centerFrequency + wiFiWidth.frequencyWidthHalf
+    private val frequencyEnd: Int = centerFrequency + wiFiWidth.frequencyWidthHalf
 
     val primaryWiFiChannel: WiFiChannel
-        get() = wiFiBand.wiFiChannels.getWiFiChannelByFrequency(primaryFrequency)
 
-    val centerWiFiChannel: WiFiChannel
-        get() = wiFiBand.wiFiChannels.getWiFiChannelByFrequency(centerFrequency)
+    private val centerWiFiChannel: WiFiChannel
 
-    val strength: Strength
-        get() = Strength.calculate(level)
+    private val strength: Strength
 
-    val distance: String
-        get() {
-            val distance = WiFiUtils.calculateDistance(primaryFrequency, level)
-            return String.format(Locale.ENGLISH, "~%.1fm", distance)
-        }
+    private val distance: String
 
-    val channelDisplay: String
-        get() {
-            val primaryChannel = primaryWiFiChannel.channel
-            val centerChannel = centerWiFiChannel.channel
-            var channel = primaryChannel.toString()
-            if (primaryChannel != centerChannel) {
-                channel += "($centerChannel)"
-            }
-            return channel
-        }
+    private val channelDisplay: String
 
     init {
-        this.wiFiBand = EnumUtils.find(WiFiBand::class.java, FrequencyPredicate(primaryFrequency), WiFiBand.GHZ2)
+        this.primaryWiFiChannel = wiFiBand.wiFiChannels.getWiFiChannelByFrequency(primaryFrequency)
+        this.centerWiFiChannel = wiFiBand.wiFiChannels.getWiFiChannelByFrequency(centerFrequency)
+        this.strength = Strength.calculate(level)
+        this.distance = String.format(Locale.ENGLISH, "~%.1fm", WiFiUtils.calculateDistance(this.primaryFrequency, this.level))
+        this.channelDisplay = retrieveChannelDisplay()
+    }
+
+    private fun retrieveChannelDisplay(): String {
+        val primaryChannel = primaryWiFiChannel.channel
+        val centerChannel = centerWiFiChannel.channel
+        var channel = primaryChannel.toString()
+        if (primaryChannel != centerChannel) {
+            channel += "($centerChannel)"
+        }
+        return channel
     }
 
     fun isInRange(frequency: Int): Boolean {

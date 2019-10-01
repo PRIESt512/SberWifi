@@ -1,5 +1,7 @@
 package ru.sbrf.sberwifi.wifi.model
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.CompareToBuilder
 import org.apache.commons.lang3.builder.EqualsBuilder
@@ -7,25 +9,27 @@ import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.apache.commons.lang3.builder.ToStringBuilder
 import java.util.*
 
-class WiFiDetail @JvmOverloads constructor(private val SSID: String, val bssid: String, val capabilities: String,
-                                           val wiFiSignal: WiFiSignal, val wiFiAdditional: WiFiAdditional = WiFiAdditional.EMPTY) : Comparable<WiFiDetail> {
+@Serializable
+class WiFiDetail @JvmOverloads constructor(@Transient private val SSID: String = StringUtils.EMPTY,
+                                           val bssid: String,
+                                           val capabilities: String,
+                                           val wiFiSignal: WiFiSignal,
+                                           val wiFiAdditional: WiFiAdditional = WiFiAdditional.EMPTY) : Comparable<WiFiDetail> {
 
     private val children: MutableList<WiFiDetail>
 
-    val security: Security
-        get() = Security.findOne(capabilities)
+    val security = Security.findOne(capabilities)
 
     val ssid: String
-        get() = if (isHidden) SSID_EMPTY else SSID
 
-    internal val isHidden: Boolean
-        get() = StringUtils.isBlank(SSID)
+    val isHidden = StringUtils.isBlank(SSID)
 
     val title: String
         get() = String.format("%s (%s)", ssid, bssid)
 
     init {
         this.children = ArrayList()
+        this.ssid = if (isHidden) SSID_EMPTY else SSID
     }
 
     constructor(wiFiDetail: WiFiDetail, wiFiAdditional: WiFiAdditional) : this(wiFiDetail.SSID, wiFiDetail.bssid, wiFiDetail.capabilities, wiFiDetail.wiFiSignal, wiFiAdditional) {}

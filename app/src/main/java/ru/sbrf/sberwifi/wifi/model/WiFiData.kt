@@ -1,5 +1,6 @@
 package ru.sbrf.sberwifi.wifi.model
 
+import kotlinx.serialization.Serializable
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.collections4.IterableUtils
 import org.apache.commons.collections4.Predicate
@@ -9,6 +10,7 @@ import ru.sbrf.sberwifi.MainContext
 import ru.sbrf.sberwifi.vendor.model.VendorService
 import java.util.*
 
+@Serializable
 class WiFiData(private val wiFiDetails: List<WiFiDetail>, val wiFiConnection: WiFiConnection) {
 
     fun getConnection(): WiFiDetail {

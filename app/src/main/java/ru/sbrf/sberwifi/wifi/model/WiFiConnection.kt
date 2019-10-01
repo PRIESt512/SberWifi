@@ -1,11 +1,18 @@
 package ru.sbrf.sberwifi.wifi.model
 
+import kotlinx.serialization.Serializable
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.EqualsBuilder
 import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.apache.commons.lang3.builder.ToStringBuilder
 
-class WiFiConnection(val ssid: String, val bssid: String, val ipAddress: String, val linkSpeed: Int) {
+@Serializable
+class WiFiConnection(val ssid: String,
+                     val bssid: String,
+                     val ipAddress: String,
+                     val linkSpeed: String,
+                     val mTxLinkSpeed: String = "LINK_SPEED_UNKNOWN",
+                     val mRxLinkSpeed: String = "LINK_SPEED_UNKNOWN") {
 
     val isConnected: Boolean
         get() = EMPTY != this
@@ -35,7 +42,7 @@ class WiFiConnection(val ssid: String, val bssid: String, val ipAddress: String,
     }
 
     companion object {
-        private const val LINK_SPEED_INVALID = -1
+        public const val LINK_SPEED_INVALID = "LINK_SPEED_UNKNOWN"
         val EMPTY = WiFiConnection(StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, LINK_SPEED_INVALID)
     }
 }

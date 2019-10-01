@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.SerializationKt
+-keep,includedescriptorclasses class ru.sbrf.sberwifi.wifi.model.**$$serializer { *; }
+-keepclassmembers class ru.sbrf.sberwifi.wifi.model.** {
+    *** Companion;
+}
+-keepclasseswithmembers class ru.sbrf.sberwifi.wifi.model.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}

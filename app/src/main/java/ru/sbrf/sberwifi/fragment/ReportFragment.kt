@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.gson.Gson
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -61,7 +63,9 @@ class ReportFragment : Fragment() {
         sendButton.setOnClickListener {
             when {
                 list4Report != null -> {
-                    val report = gson.toJson(list4Report)
+                    //val report = gson.toJson(list4Report)
+                    val json = Json(JsonConfiguration.Stable)
+                    val report = json.stringify(WiFiData.serializer(), list4Report)
                     val body = report.toRequestBody("application/json; charset=utf-8".toMediaType())
                     val request = Request.Builder()
                             .url("http")

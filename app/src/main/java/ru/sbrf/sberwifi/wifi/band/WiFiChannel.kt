@@ -1,10 +1,12 @@
 package ru.sbrf.sberwifi.wifi.band
 
+import kotlinx.serialization.Serializable
 import org.apache.commons.lang3.builder.CompareToBuilder
 import org.apache.commons.lang3.builder.EqualsBuilder
 import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.apache.commons.lang3.builder.ToStringBuilder
 
+@Serializable
 class WiFiChannel : Comparable<WiFiChannel> {
 
     val channel: Int
