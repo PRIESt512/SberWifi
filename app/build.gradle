@@ -15,6 +15,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
+                cFlags "-I./iperf/ -I${projectDir}"
                 cppFlags ""
             }
         }

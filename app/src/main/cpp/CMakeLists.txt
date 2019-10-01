@@ -10,14 +10,40 @@ cmake_minimum_required(VERSION 3.4.1)
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
+if ("${ANDROID_ABI}" MATCHES "arm64-v8a|x86_64")
+    set(HAVE_SO_MAX_PACING_RATE 1)
+endif ()
+
+set(IPERF_SRC ${CMAKE_SOURCE_DIR}/iperf)
+
+configure_file(${CMAKE_SOURCE_DIR}/../assets/iperf_config.h.in ${CMAKE_BINARY_DIR}/src/iperf_config.h)
+
 add_library( # Sets the name of the library.
-        native-lib
+        iperf
 
         # Sets the library as a shared library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        native-lib.cpp)
+        ${IPERF_SRC}/cjson.c
+        ${IPERF_SRC}/dscp.c
+        ${IPERF_SRC}/iperf_api.c
+        ${IPERF_SRC}/iperf_auth.c
+        ${IPERF_SRC}/iperf_client_api.c
+        ${IPERF_SRC}/iperf_error.c
+        ${IPERF_SRC}/iperf_locale.c
+        ${IPERF_SRC}/iperf_sctp.c
+        ${IPERF_SRC}/iperf_server_api.c
+        ${IPERF_SRC}/iperf_tcp.c
+        ${IPERF_SRC}/iperf_time.c
+        ${IPERF_SRC}/iperf_udp.c
+        ${IPERF_SRC}/iperf_util.c
+        ${IPERF_SRC}/net.c
+        ${IPERF_SRC}/t_api.c
+        ${IPERF_SRC}/tcp_info.c
+        ${IPERF_SRC}/timer.c
+        ${IPERF_SRC}/units.c
+        )
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -37,7 +63,7 @@ find_library( # Sets the name of the path variable.
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-        native-lib
+        iperf
 
         # Links the target library to the log library
         # included in the NDK.

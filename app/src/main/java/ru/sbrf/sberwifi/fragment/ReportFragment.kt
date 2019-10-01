@@ -119,5 +119,9 @@ class ReportFragment : Fragment() {
 
         @JvmStatic
         fun newInstance() = ReportFragment()
+
+        init {
+            System.loadLibrary("iperf")
+        }
     }
 }
