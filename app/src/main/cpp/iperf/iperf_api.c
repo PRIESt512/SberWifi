@@ -3682,6 +3682,7 @@ iperf_free_stream(struct iperf_stream *sp) {
 }
 
 /**************************************************************************/
+char *tempPath;
 struct iperf_stream *
 iperf_new_stream(struct iperf_test *test, int s, int sender) {
     struct iperf_stream *sp;
@@ -3700,7 +3701,7 @@ iperf_new_stream(struct iperf_test *test, int s, int sender) {
             tempdir = getenv("TMP");
         }
         if (tempdir == 0) {
-            tempdir = "/tmp";
+            tempdir = tempPath;
         }
         snprintf(template, sizeof(template) / sizeof(char), "%s/iperf3.XXXXXX", tempdir);
     }

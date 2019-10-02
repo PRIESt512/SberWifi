@@ -377,6 +377,8 @@ void iperf_on_test_finish(struct iperf_test *);
 
 extern jmp_buf env;
 
+extern char *tempPath;
+
 /* Client routines. */
 int iperf_run_client(struct iperf_test *);
 
