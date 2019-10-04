@@ -5,6 +5,7 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
+set(CMAKE_CXX_STANDARD 14)
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -44,6 +45,7 @@ add_library( # Sets the name of the library.
         ${IPERF_SRC}/timer.c
         ${IPERF_SRC}/units.c
         ${CMAKE_SOURCE_DIR}/iperfJava.cpp
+        ${CMAKE_SOURCE_DIR}/IperfTest.cpp
         )
 
 # Searches for a specified prebuilt library and stores the path as a

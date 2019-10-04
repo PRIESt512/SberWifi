@@ -13,10 +13,23 @@
 extern "C" {
 #endif
 
+/**
+ * Старт клиента iperf. Передаем параметры для удаленного подключения к серверу iperf.
+ * @param env - переменная окружения JVM-машины
+ * @param thisObject - объект, который произвел вызов этого нативного метода
+ * @param host - хост удаленной машины в той же сети, что и мобильное устройство
+ * @param port - порт удаленного сервера, на котором идет прослушка подключений
+ */
 JNIEXPORT void JNICALL
 Java_ru_sbrf_sberwifi_fragment_WiFiFragment_start(JNIEnv *env, jobject thisObject, jstring host,
                                                   jint port);
 
+/**
+ * Получаем абсолютный путь до директории, которую iperf будет использовать для создания временных файлов
+ * на период тестирования сети
+ * @param env - переменная окружения JVM-машины
+ * @param thisObject - объект, который произвел вызов этого нативного метода
+ */
 JNIEXPORT void JNICALL
 Java_ru_sbrf_sberwifi_fragment_WiFiFragment_initTempPath(JNIEnv *env, jobject thisObject);
 #ifdef __cplusplus
