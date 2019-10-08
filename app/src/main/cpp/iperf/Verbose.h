@@ -2,10 +2,10 @@
 // Created by pleshkanev.a.a on 04/10/2019.
 //
 
-#ifndef SBERWIFI_VERBOSEENUM_H
-#define SBERWIFI_VERBOSEENUM_H
+#ifndef SBERWIFI_VERBOSE_H
+#define SBERWIFI_VERBOSE_H
 
-enum class VerboseEnum : unsigned {
+enum class Verbose : unsigned {
     YES,
     NO
 };

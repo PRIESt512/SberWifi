@@ -4,9 +4,9 @@
 
 #ifndef SBERWIFI_IPERFJAVA_H
 #define SBERWIFI_IPERFJAVA_H
-
 #include <jni.h>
-#include "iperf/iperf_api.h"
+
+#include "../iperf/iperf_api.h"
 #include <string>
 
 #ifdef __cplusplus
@@ -17,12 +17,14 @@ extern "C" {
  * Старт клиента iperf. Передаем параметры для удаленного подключения к серверу iperf.
  * @param env - переменная окружения JVM-машины
  * @param thisObject - объект, который произвел вызов этого нативного метода
- * @param host - хост удаленной машины в той же сети, что и мобильное устройство
- * @param port - порт удаленного сервера, на котором идет прослушка подключений
+ * @param host - удаленная машина, на которой работает удаленный сервер iperf
+ * @param port - порт, на котором сервер iperf слушает клиента
+ * @param duration длительность тестирования в сек
+ * @param streams количество одновременных потоков данных для тестирования
  */
 JNIEXPORT void JNICALL
 Java_ru_sbrf_sberwifi_fragment_WiFiFragment_start(JNIEnv *env, jobject thisObject, jstring host,
-                                                  jint port);
+                                                  jint port, jint duration, jint streams);
 
 /**
  * Получаем абсолютный путь до директории, которую iperf будет использовать для создания временных файлов

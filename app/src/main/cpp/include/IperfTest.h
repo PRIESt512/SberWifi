@@ -5,22 +5,27 @@
 #ifndef SBERWIFI_IPERFTEST_H
 #define SBERWIFI_IPERFTEST_H
 
-#include <string>
-#include "iperf/iperf_api.h"
-#include "iperf/iperf.h"
-#include <functional>
+
 #include <unordered_map>
+#include <string>
+#include "../iperf/iperf_api.h"
+#include "../iperf/iperf.h"
+#include <functional>
+#include <sstream>
+#include <iostream>
 #include "RoleEnum.h"
-#include "VerboseEnum.h"
+#include "../iperf/Verbose.h"
+#include "JsonReport.h"
+
 
 class IperfTest {
 
 public:
-    IperfTest(const std::string &host, int port, VerboseEnum verbose, Role role);
+    IperfTest(const std::string &host, int port, Verbose verbose, Role role, JsonReport jsonReport);
 
     ~IperfTest();
 
-    void run();
+    void run_client();
 
     /**
      * Установка ограничение первых n секунд теста
@@ -47,19 +52,24 @@ public:
     void set_reporter_interval(int interval);
 
     /**
-     * Вызов callback-функции для вывода статистики
-     */
-    void print_statistics(std::function<void(std::string)>);
+    * Вызов callback-функции для вывода статистики
+    */
+    void print_statistics(const std::function<void(std::string)> &);
 
 private:
-    std::unordered_map<VerboseEnum, int> verboseMode = {
-            {VerboseEnum::YES, 1},
-            {VerboseEnum::NO,  0}
+    std::unordered_map<Verbose, int> verboseMode = {
+            {Verbose::YES, 1},
+            {Verbose::NO,  0}
     };
 
     std::unordered_map<Role, char> role_map = {
             {Role::CLIENT, 'c'},
             {Role::SERVER, 's'}
+    };
+
+    std::unordered_map<JsonReport, unsigned> json_report = {
+            {JsonReport::YES, 1},
+            {JsonReport::NO,  0}
     };
 
     struct iperf_test *test;
