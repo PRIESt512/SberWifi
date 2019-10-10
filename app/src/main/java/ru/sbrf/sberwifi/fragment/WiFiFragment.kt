@@ -75,6 +75,13 @@ class WiFiFragment : Fragment() {
             list?.adapter = adapter
         })
 
+        /*initTempPath()
+        val thread = Thread {
+            //Test.test()
+            start("10.8.37.50", 8090)
+        }
+        thread.start()*/
+
         return viewFragment
     }
 
@@ -124,5 +131,9 @@ class WiFiFragment : Fragment() {
 
         @JvmStatic
         fun newInstance() = WiFiFragment()
+
+        init {
+            System.loadLibrary("iperf")
+        }
     }
 }

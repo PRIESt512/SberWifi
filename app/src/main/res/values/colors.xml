@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#259731</color>
+    <color name="colorPrimaryDark">#259731</color>
     <color name="colorAccent">#D81B60</color>
     <color name="white">#FFFFFF</color>
     <color name="white_trans">#99FFFFFF</color>
@@ -28,4 +28,18 @@
     <color name="success">#4CAF50</color>
     <!-- background -->
     <color name="background">#616161</color>
+
+    <color name="blue">#00BCD4</color>
+    <color name="green">#FF00FF5D</color>
+
+    <integer-array name="waveloader_colorsarray">
+        <item>@color/blue</item>
+        <item>@color/green</item>
+        <item>@color/blue</item>
+        <item>@color/green</item>
+        <item>@color/blue</item>
+        <item>@color/green</item>
+        <item>@color/blue</item>
+        <item>@color/green</item>
+    </integer-array>
 </resources>

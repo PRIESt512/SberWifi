@@ -14,4 +14,10 @@
     <string name="wifi_band_5ghz" translatable="false">"5 GHz"</string>
     <!-- wifi band end -->
 
+    <string name="iperfHost">Хост</string>
+    <string name="iperfPort">Порт</string>
+    <string name="duration_toggles">Длительность</string>
+    <string name="streams_toggle">Кол-во потоков</string>
+    <string name="iperfMenu">iperf</string>
+
 </resources>
