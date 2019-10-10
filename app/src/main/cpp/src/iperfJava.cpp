@@ -5,11 +5,12 @@
 #include "../include/iperfJava.h"
 #include "../include/IperfTest.h"
 #include <android/log.h>
+#include "../util/utf8.h"
 
 #define APPNAME "SberWiFi"
 
 extern "C" JNIEXPORT void JNICALL
-Java_ru_sbrf_sberwifi_fragment_WiFiFragment_initTempPath(JNIEnv *env, jobject thisObject) {
+Java_ru_sbrf_sberwifi_fragment_IperfFragment_initTempPath(JNIEnv *env, jobject thisObject) {
     jclass cls2 = env->GetObjectClass(thisObject);
 
     if (cls2 == nullptr) {
@@ -29,8 +30,8 @@ Java_ru_sbrf_sberwifi_fragment_WiFiFragment_initTempPath(JNIEnv *env, jobject th
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_ru_sbrf_sberwifi_fragment_WiFiFragment_start(JNIEnv *env, jobject thisObject, jstring host,
-                                                  jint port, jint duration, jint streams) {
+Java_ru_sbrf_sberwifi_fragment_IperfFragment_start(JNIEnv *env, jobject thisObject, jstring host,
+                                                   jint port, jint duration, jint streams) {
 
     const char *hostPointer = env->GetStringUTFChars(host, nullptr);
     __android_log_print(ANDROID_LOG_DEBUG, APPNAME, "Start host %s", hostPointer);
@@ -52,9 +53,12 @@ Java_ru_sbrf_sberwifi_fragment_WiFiFragment_start(JNIEnv *env, jobject thisObjec
         test.set_num_streams(streams);
         test.run_client();
 
-        test.print_statistics([&](const std::string &info) {
-            jstring out = env->NewStringUTF(info.c_str());
-            env->CallObjectMethod(thisObject, callback, out);
+        test.print_statistics([=](const std::string &info) {
+            std::string temp;
+            utf8::replace_invalid(info.begin(), info.end(), back_inserter(temp));
+            auto out_valid = temp;
+            jstring out = env->NewStringUTF(out_valid.c_str());
+            env->CallVoidMethod(thisObject, callback, out);
         });
     } catch (const std::exception &e) {
         __android_log_print(ANDROID_LOG_ERROR, APPNAME, "Error %s", e.what());

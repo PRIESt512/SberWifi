@@ -75,22 +75,14 @@ class WiFiFragment : Fragment() {
             list?.adapter = adapter
         })
 
-        initTempPath()
+        /*initTempPath()
         val thread = Thread {
             //Test.test()
             start("10.8.37.50", 8090)
         }
-        thread.start()
+        thread.start()*/
 
         return viewFragment
-    }
-
-    external fun start(host: String, port: Int)
-
-    external fun initTempPath()
-
-    public fun getTempPath(): String? {
-        return this.context?.cacheDir?.absolutePath
     }
 
     fun setOnWiFiListener(callback: OnWifiInteractionListener) {

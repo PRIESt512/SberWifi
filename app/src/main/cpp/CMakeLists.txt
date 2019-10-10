@@ -16,6 +16,7 @@ if ("${ANDROID_ABI}" MATCHES "arm64-v8a|x86_64")
 endif ()
 
 set(IPERF_SRC ${CMAKE_SOURCE_DIR}/iperf)
+set(UTF8_SRC ${CMAKE_SOURCE_DIR}/util/utf8)
 
 configure_file(${CMAKE_SOURCE_DIR}/../assets/iperf_config.h.in ${CMAKE_BINARY_DIR}/src/iperf_config.h)
 
@@ -46,6 +47,10 @@ add_library( # Sets the name of the library.
         ${IPERF_SRC}/units.c
         ${CMAKE_SOURCE_DIR}/src/iperfJava.cpp
         ${CMAKE_SOURCE_DIR}/src/IperfTest.cpp
+        ${UTF8_SRC}/checked.h
+        ${UTF8_SRC}/core.h
+        ${UTF8_SRC}/unchecked.h
+        ${CMAKE_SOURCE_DIR}/util/utf8.h
         )
 
 # Searches for a specified prebuilt library and stores the path as a

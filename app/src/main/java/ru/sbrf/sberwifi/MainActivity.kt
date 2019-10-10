@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import ru.sbrf.sberwifi.fragment.IperfFragment
 import ru.sbrf.sberwifi.fragment.ReportFragment
 import ru.sbrf.sberwifi.fragment.WiFiFragment
 import ru.sbrf.sberwifi.livemodel.DetectorViewModel
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        subscribeUpdateScanData()
+        //subscribeUpdateScanData()
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
@@ -40,7 +41,11 @@ class MainActivity : AppCompatActivity(),
                     onActivityAttachFragment(fragment)
                     fragment
                 }
-                //R.id.navigation_settings -> selectedFragment = SettingsFragment.newInstance()
+                R.id.navigation_iperf -> {
+                    val fragment = IperfFragment.newInstance()
+                    onActivityAttachFragment(fragment)
+                    fragment
+                }
                 else -> throw UnsupportedOperationException("Невозможно выбрать фрагмент для отображения")
             }
 
