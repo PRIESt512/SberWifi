@@ -4,36 +4,37 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.agik.AGIKSwipeButton.Controller.OnSwipeCompleteListener
 import com.agik.AGIKSwipeButton.View.Swipe_Button_View
+import com.agrawalsuneet.squareloaderspack.loaders.WaveLoader
 import com.github.hamzaahmedkhan.spinnerdialog.OnSpinnerOKPressedListener
 import com.github.hamzaahmedkhan.spinnerdialog.SpinnerDialogFragment
 import com.github.hamzaahmedkhan.spinnerdialog.SpinnerModel
+import com.jayway.jsonpath.JsonPath
 import com.savvyapps.togglebuttonlayout.ToggleButtonLayout
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import ru.sbrf.sberwifi.R
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [IperfFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [IperfFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class IperfFragment : Fragment() {
 
-    var duration: Int? = null
+    lateinit var animationTest: WaveLoader
 
-    var streams: Int? = null
+    lateinit var resultTest: TextView
+
+    var jobTest: Job? = null
+
+    var duration: Int = 5
+
+    var streams: Int = 1
 
     var inputPort: String? = null
 
@@ -50,8 +51,12 @@ class IperfFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_iperf, container, false)
 
+        animationTest = view.findViewById(R.id.animationTest)
+        animationTest.visibility = View.GONE
         val inputPortText = view.findViewById<EditText>(R.id.inputPort)
         val inputHostText = view.findViewById<EditText>(R.id.inputHost)
+        resultTest = view.findViewById(R.id.resultTest)
+        resultTest.visibility = View.GONE
 
         inputPortText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -131,21 +136,26 @@ class IperfFragment : Fragment() {
         startStopButton = view.findViewById<Swipe_Button_View>(R.id.start_stop)
         startStopButton?.setOnSwipeCompleteListener_forward_reverse(object : OnSwipeCompleteListener {
             override fun onSwipe_Forward(swipe_button_view: Swipe_Button_View?) {
-                /* GlobalScope.launch {
-                     initTempPath()
-                     startAsync(inputHost!!, inputPort!!.toInt(), 5, 1)
-                 }*/
-                Thread {
+                if (inputHost == null || inputPort == null) {
+                    Toast.makeText(view.context, "Введите host и port  удаленной машины", Toast.LENGTH_SHORT).show()
+                    startStopButton?.setreverse_0()
+                    return
+                }
+                jobTest = GlobalScope.launch {
                     initTempPath()
-                    start(inputHost!!, inputPort!!.toInt(), 5, 1)
-                }.start()
-
+                    startAsync(inputHost!!, inputPort!!.toInt(), duration, streams)
+                }
+                Toast.makeText(view.context, "Запущен тест: длительность - $duration сек, потоков - $streams", Toast.LENGTH_SHORT).show()
+                animationTest.visibility = View.VISIBLE
+                resultTest.visibility = View.VISIBLE
                 startStopButton?.setText("Остановить тест iperf")
                 startStopButton?.setThumbBackgroundColor(ContextCompat.getColor(view.context, R.color.material_red400))
                 startStopButton?.setSwipeBackgroundColor(ContextCompat.getColor(view.context, R.color.material_red500))
             }
 
             override fun onSwipe_Reverse(swipe_button_view: Swipe_Button_View?) {
+                resultTest.visibility = View.GONE
+                animationTest.visibility = View.GONE
                 startStopButton?.setText("Запустить тест iperf")
                 startStopButton?.setThumbBackgroundColor(ContextCompat.getColor(view.context, R.color.material_green400))
                 startStopButton?.setSwipeBackgroundColor(ContextCompat.getColor(view.context, R.color.material_green500))
@@ -175,7 +185,28 @@ class IperfFragment : Fragment() {
     }
 
     public fun reportCallback(report: String?) {
-        val str = report
+        try {
+            val secondsTest = JsonPath.read<Double>(report, "$.end.sum_received.seconds")
+            val bytesTest = JsonPath.read<Int>(report, "$.end.sum_received.bytes")
+            val speedTest = JsonPath.read<Double>(report, "$.end.sum_received.bits_per_second")
+            val cpuUtilTest = JsonPath.read<Double>(report, "$.end.cpu_utilization_percent.host_total")
+            val result = "Результаты тестирования: Время тестирования $secondsTest сек, \n" +
+                    "Передано МБ: ${bytesTest / 1000000} \n" +
+                    //"Скорость передачи данных МБ/с ${speedTest / 800000000} \n" +
+                    "Нагрузка на процессор: $cpuUtilTest%"
+            MainScope().launch {
+                animationTest.visibility = View.INVISIBLE
+                startStopButton?.setText("Запустить тест iperf")
+                startStopButton?.setThumbBackgroundColor(ContextCompat.getColor(view!!.context, R.color.material_green400))
+                startStopButton?.setSwipeBackgroundColor(ContextCompat.getColor(view!!.context, R.color.material_green500))
+                startStopButton?.setreverse_0()
+
+                resultTest.text = result
+                resultTest.visibility = View.VISIBLE
+            }
+        } catch (ex: Exception) {
+            Log.e("Iperf", ex.toString())
+        }
     }
 
     companion object {

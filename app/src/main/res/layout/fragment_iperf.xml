@@ -52,6 +52,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="75dp"
+        android:background="@drawable/border_button"
         app:dividerColor="@android:color/holo_green_light"
         app:menu="@menu/toggles_text"
         app:selectedColor="?attr/colorAccent"
@@ -61,13 +62,33 @@
         android:id="@+id/start_stop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="400dp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="70dp"
         app:sb_swipe_animate_text="true"
         app:sb_swipe_bg_color="@color/material_green400"
         app:sb_swipe_both_direction="true"
         app:sb_swipe_text="Запустить тест iperf" />
 
+    <com.agrawalsuneet.squareloaderspack.loaders.WaveLoader
+        android:id="@+id/animationTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:wave_animDuration="500"
+        app:wave_delayDuration="100"
+        app:wave_interpolator="@android:anim/linear_interpolator"
+        app:wave_isSingleColor="false"
+        app:wave_noOfDots="8"
+        app:wave_rectColorsArray="@array/waveloader_colorsarray"
+        app:wave_rectDistance="8dp"
+        app:wave_rectHeight="80dp"
+        app:wave_rectWidth="16dp" />
+
+    <TextView
+        android:id="@+id/resultTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 </FrameLayout>

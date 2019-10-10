@@ -83,6 +83,5 @@ void IperfTest::print_statistics(const std::function<void(std::string)> &callbac
         output.erase(std::remove(output.begin(), output.end(), '\t'), output.end());
 
         callback(std::string(output));
-        // callback(iperf_get_test_json_output_string(test));
     }
 }

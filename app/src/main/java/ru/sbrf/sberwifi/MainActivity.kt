@@ -13,6 +13,7 @@ import ru.sbrf.sberwifi.fragment.WiFiFragment
 import ru.sbrf.sberwifi.livemodel.DetectorViewModel
 import ru.sbrf.sberwifi.wifi.model.WiFiData
 
+
 @Suppress("CAST_NEVER_SUCCEEDS")
 class MainActivity : AppCompatActivity(),
         WiFiFragment.OnWifiInteractionListener,
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //subscribeUpdateScanData()
+        supportActionBar?.hide()
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
