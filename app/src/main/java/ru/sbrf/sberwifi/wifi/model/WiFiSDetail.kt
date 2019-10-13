@@ -14,7 +14,7 @@ class WiFiDetail @JvmOverloads constructor(@Transient private val SSID: String =
                                            val bssid: String,
                                            val capabilities: String,
                                            val wiFiSignal: WiFiSignal,
-                                           val wiFiAdditional: WiFiAdditional = WiFiAdditional.EMPTY) : Comparable<WiFiDetail> {
+                                           val wiFiAdditional: WiFiAdditional = WiFiAdditional.EMPTY) : Comparable<WiFiDetail>, java.io.Serializable {
 
     private val children: MutableList<WiFiDetail>
 

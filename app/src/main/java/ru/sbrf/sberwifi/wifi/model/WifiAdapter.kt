@@ -19,7 +19,7 @@ import ru.sbrf.sberwifi.livemodel.DetectorViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class WifiAdapter(fragment: Fragment, context: Context, wifiDetails: List<WiFiDetail> = ArrayList(15), resource: Int = R.layout.wifi_list_menu) :
+class WifiAdapter(fragment: Fragment, context: Context, val wifiDetails: List<WiFiDetail> = ArrayList(15), resource: Int = R.layout.wifi_list_menu) :
         ArrayAdapter<WiFiDetail>(context, resource, wifiDetails) {
 
     private val channelRating: ChannelRating = ChannelRating()
@@ -28,6 +28,7 @@ class WifiAdapter(fragment: Fragment, context: Context, wifiDetails: List<WiFiDe
     init {
         viewModel.resultScanLiveData.observe(fragment, Observer {
             this.clear()
+            fragment.tag
             this.addAll(it.getWiFiDetails())
             this.notifyDataSetChanged()
             channelRating.setWiFiDetails(it.getWiFiDetails())
