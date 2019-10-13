@@ -1,10 +1,9 @@
 package ru.sbrf.sberwifi.livemodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import ru.sbrf.sberwifi.wifi.model.WiFiData
 
 /**
@@ -13,9 +12,12 @@ import ru.sbrf.sberwifi.wifi.model.WiFiData
 public class DetectorViewModel(application: Application) : AndroidViewModel(application) {
 
     private val wifiScan: WiFiScanLiveData = WiFiScanLiveData(application.applicationContext)
-    private val resultScanLiveData: MutableLiveData<WiFiData> = MutableLiveData()
     private val resultScanObserver: Observer<WiFiData>
     private val scanMediatorLiveData: MediatorLiveData<WiFiData> = MediatorLiveData()
+
+    val resultScanLiveData: MutableLiveData<WiFiData> by lazy {
+        MutableLiveData<WiFiData>()
+    }
 
     private val transformer: Transformer = Transformer()
 
@@ -25,13 +27,17 @@ public class DetectorViewModel(application: Application) : AndroidViewModel(appl
         }
 
         scanMediatorLiveData.addSource(wifiScan) {
-            val wiFiData = transformer.transformToWiFiData(it.scanResult, it.wifiInfo)
-            scanMediatorLiveData.value = wiFiData
+            viewModelScope.launch {
+                val result = transform(it)
+                scanMediatorLiveData.value = result
+            }
         }
         scanMediatorLiveData.observeForever(resultScanObserver)
     }
 
-    public fun getResultScanLiveData(): MutableLiveData<WiFiData> {
-        return resultScanLiveData
+    private suspend fun transform(scan: WiFiScanLiveData.WiFiScan) = withContext(Dispatchers.Default) {
+        Log.i("Detector", Thread.currentThread().name)
+
+        return@withContext transformer.transformToWiFiData(scan.scanResult, scan.wifiInfo)
     }
 }

@@ -26,52 +26,65 @@ class WifiAdapter(fragment: Fragment, context: Context, wifiDetails: List<WiFiDe
     private val viewModel = ViewModelProviders.of(fragment).get(DetectorViewModel::class.java)
 
     init {
-        viewModel.getResultScanLiveData().observe(fragment, Observer {
+        viewModel.resultScanLiveData.observe(fragment, Observer {
             this.clear()
             this.addAll(it.getWiFiDetails())
+            this.notifyDataSetChanged()
             channelRating.setWiFiDetails(it.getWiFiDetails())
         })
     }
 
     @SuppressLint("InflateParams")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val wifiDetail = getItem(position)!!
 
-        var view: View? = convertView
+        var viewHolder: ViewHolder? = null
+        var view = convertView
         if (view == null) {
             view = INSTANCE.getLayoutInflater().inflate(R.layout.wifi_list_menu, parent, false)
+            viewHolder = ViewHolder(view)
+            view.tag = viewHolder
+        } else {
+            viewHolder = view.tag as ViewHolder?
         }
+        val wifiDetail = getItem(position)!!
 
-        val imageView = view?.findViewById<ImageView>(R.id.levelImage)
-        imageView?.setImageResource(wifiDetail.wiFiSignal.strength.imageResource())
-        imageView?.setColorFilter(ContextCompat.getColor(context, wifiDetail.wiFiSignal.strength.colorResource()))
+        viewHolder!!.levelImage.setImageResource(wifiDetail.wiFiSignal.strength.imageResource())
+        viewHolder.levelImage.setColorFilter(ContextCompat.getColor(context, wifiDetail.wiFiSignal.strength.colorResource()))
 
         val strengthWiFi = wifiDetail.wiFiSignal.strength
-        val textLevel = view?.findViewById<TextView>(R.id.level)
-        textLevel?.setTextColor(ContextCompat.getColor(context, strengthWiFi.colorResource()))
-        textLevel?.text = String.format("%ddBm", wifiDetail.wiFiSignal.level)
+        viewHolder.level.setTextColor(ContextCompat.getColor(context, strengthWiFi.colorResource()))
+        viewHolder.level.text = String.format("%ddBm", wifiDetail.wiFiSignal.level)
 
         val security = wifiDetail.security
-        val securityImage = view?.findViewById<ImageView>(R.id.securityImage)
-        securityImage?.setImageResource(security.imageResource)
+        viewHolder.capabilities.setCompoundDrawablesWithIntrinsicBounds(security.imageResource, 0, 0, 0)
+        viewHolder.capabilities.text = wifiDetail.capabilities
 
-        view?.findViewById<TextView>(R.id.capabilities)?.text = wifiDetail.capabilities
-        view?.findViewById<TextView>(R.id.ssid_and_mac)?.text = String.format(Locale.ENGLISH, "%s (%s)", wifiDetail.ssid, wifiDetail.bssid)
-        view?.findViewById<TextView>(R.id.channel)?.text = String.format(Locale.ENGLISH, "%d", wifiDetail.wiFiSignal.primaryWiFiChannel.channel)
-        view?.findViewById<TextView>(R.id.primaryFrequency)?.text = String.format(Locale.ENGLISH, "%d МГц |", wifiDetail.wiFiSignal.primaryWiFiChannel.frequency)
-        view?.findViewById<TextView>(R.id.channel_frequency_range)?.text = String.format(Locale.ENGLISH, "%d - %d", wifiDetail.wiFiSignal.frequencyStart, wifiDetail.wiFiSignal.frequencyEnd)
-        view?.findViewById<TextView>(R.id.width)?.text = String.format(Locale.ENGLISH, "(%d%s)", wifiDetail.wiFiSignal.wiFiWidth.frequencyWidth, WiFiSignal.FREQUENCY_UNITS)
+        viewHolder.ssid_and_mac.text = String.format(Locale.ENGLISH, "%s (%s)", wifiDetail.ssid, wifiDetail.bssid)
+        viewHolder.channel.text = String.format(Locale.ENGLISH, "%d", wifiDetail.wiFiSignal.primaryWiFiChannel.channel)
+        viewHolder.primaryFrequency.text = String.format(Locale.ENGLISH, "%d МГц |", wifiDetail.wiFiSignal.primaryWiFiChannel.frequency)
+        viewHolder.channel_frequency_range.text = String.format(Locale.ENGLISH, "%d - %d", wifiDetail.wiFiSignal.frequencyStart, wifiDetail.wiFiSignal.frequencyEnd)
+        viewHolder.width.text = String.format(Locale.ENGLISH, "(%d%s)", wifiDetail.wiFiSignal.wiFiWidth.frequencyWidth, WiFiSignal.FREQUENCY_UNITS)
 
         val strength = Strength.reverse(channelRating.getStrength(wifiDetail.wiFiSignal.primaryWiFiChannel))
-        val ratingBar = view?.findViewById<RatingBar>(R.id.channel_rating)
         val size = Strength.values().size
-        ratingBar?.max = size
-        ratingBar?.numStars = size
-        ratingBar?.isIndicator
-        ratingBar?.rating = (strength.ordinal + 1).toFloat()
+        viewHolder.channel_rating.max = size
+        viewHolder.channel_rating.numStars = size
+        viewHolder.channel_rating.isIndicator
+        viewHolder.channel_rating.rating = (strength.ordinal + 1).toFloat()
         val color = ContextCompat.getColor(context, strength.colorResource())
-        ratingBar?.progressTintList = ColorStateList.valueOf(color)
+        viewHolder.channel_rating.progressTintList = ColorStateList.valueOf(color)
 
         return view!!
+    }
+
+    private inner class ViewHolder(val levelImage: ImageView, val level: TextView, val capabilities: TextView,
+                                   val ssid_and_mac: TextView, val channel: TextView, val primaryFrequency: TextView,
+                                   val channel_frequency_range: TextView, val width: TextView, val channel_rating: RatingBar) {
+        constructor(view: View) : this(
+                view.findViewById<ImageView>(R.id.levelImage), view.findViewById<TextView>(R.id.level),
+                view.findViewById<TextView>(R.id.capabilities), view.findViewById<TextView>(R.id.ssid_and_mac),
+                view.findViewById<TextView>(R.id.channel), view.findViewById<TextView>(R.id.primaryFrequency),
+                view.findViewById<TextView>(R.id.channel_frequency_range), view.findViewById<TextView>(R.id.width),
+                view.findViewById<RatingBar>(R.id.channel_rating))
     }
 }

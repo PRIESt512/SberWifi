@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.sbrf.sberwifi.fragment.IperfFragment
 import ru.sbrf.sberwifi.fragment.ReportFragment
@@ -63,14 +62,6 @@ class MainActivity : AppCompatActivity(),
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.frame_layout, WiFiFragment.newInstance())
         transaction.commit()
-    }
-
-    private fun subscribeUpdateScanData() {
-        viewModel = ViewModelProviders.of(this).get(DetectorViewModel::class.java)
-
-        viewModel.getResultScanLiveData().observe(this, Observer {
-            dataScan = it
-        })
     }
 
     private fun onActivityAttachFragment(fragment: Fragment) {

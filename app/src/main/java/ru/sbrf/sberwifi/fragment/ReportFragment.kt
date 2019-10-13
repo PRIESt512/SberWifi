@@ -56,7 +56,7 @@ class ReportFragment : Fragment() {
 
         val viewModel = ViewModelProviders.of(this).get(DetectorViewModel::class.java)
 
-        viewModel.getResultScanLiveData().observe(this, Observer {
+        viewModel.resultScanLiveData.observe(this, Observer {
             list4Report = it
         })
 

@@ -62,22 +62,6 @@ class WiFiFragment : Fragment() {
 
         val adapter = WifiAdapter(this, context!!)
         list?.adapter = adapter
-
-        /* list?.adapter = adapter
-         viewModel!!.getResultScanLiveData().observe(this, Observer {
-             *//* val listWiFi = ArrayList<ItemListWifi>()
-
-             for (item in it.getWiFiDetails()) {
-                 listWiFi.add(ItemListWifi(item.ssid, item.wiFiSignal.level))
-             }
-
-             val adapter = ArrayAdapter(this.context!!,
-                     android.R.layout.simple_expandable_list_item_1,
-                     listWiFi)*//*
-            val adapter = WifiAdapter(this, context!!, it.getWiFiDetails())
-
-            list?.adapter = adapter
-        })*/
         return viewFragment
     }
 

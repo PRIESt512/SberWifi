@@ -26,6 +26,8 @@ public class WiFiScanLiveData(private val context: Context) : LiveData<WiFiScanL
                 val success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)
                 if (success) {
                     Log.i("Scan", "Success")
+                    Log.i("LiveData", Thread.currentThread().name)
+
                     scanSuccess(wifi)
                 } else {
                     Log.e("Scan", "Error")
@@ -51,9 +53,9 @@ public class WiFiScanLiveData(private val context: Context) : LiveData<WiFiScanL
     }
 
     private fun scanSuccess(wifiManager: WifiManager) {
+
         val results = wifiManager.scanResults
         val wifiInfo = wifiManager.connectionInfo
-
         val wiFiScan = WiFiScan(results, wifiInfo)
 
         value = wiFiScan
