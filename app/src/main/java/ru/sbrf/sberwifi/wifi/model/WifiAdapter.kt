@@ -59,7 +59,7 @@ class WifiAdapter(fragment: Fragment, context: Context, wifiDetails: List<WiFiDe
         viewHolder.capabilities.setCompoundDrawablesWithIntrinsicBounds(security.imageResource, 0, 0, 0)
         viewHolder.capabilities.text = wifiDetail.capabilities
 
-        viewHolder.ssid_and_mac.text = String.format(Locale.ENGLISH, "%s (%s)", wifiDetail.ssid, wifiDetail.bssid)
+        viewHolder.ssid_and_mac.text = wifiDetail.title
         viewHolder.channel.text = String.format(Locale.ENGLISH, "%d", wifiDetail.wiFiSignal.primaryWiFiChannel.channel)
         viewHolder.primaryFrequency.text = String.format(Locale.ENGLISH, "%d МГц |", wifiDetail.wiFiSignal.primaryWiFiChannel.frequency)
         viewHolder.channel_frequency_range.text = String.format(Locale.ENGLISH, "%d - %d", wifiDetail.wiFiSignal.frequencyStart, wifiDetail.wiFiSignal.frequencyEnd)
