@@ -15,15 +15,15 @@ import java.util.*
 class WiFiSignal(val primaryFrequency: Int, val centerFrequency: Int, val wiFiWidth: WiFiWidth, val level: Int, val is80211mc: Boolean) {
     private val wiFiBand: WiFiBand = EnumUtils.find(WiFiBand::class.java, FrequencyPredicate(primaryFrequency), WiFiBand.GHZ2)
 
-    private val frequencyStart: Int = centerFrequency - wiFiWidth.frequencyWidthHalf
+    public val frequencyStart: Int = centerFrequency - wiFiWidth.frequencyWidthHalf
 
-    private val frequencyEnd: Int = centerFrequency + wiFiWidth.frequencyWidthHalf
+    public val frequencyEnd: Int = centerFrequency + wiFiWidth.frequencyWidthHalf
 
     val primaryWiFiChannel: WiFiChannel
 
     private val centerWiFiChannel: WiFiChannel
 
-    private val strength: Strength
+    public val strength: Strength
 
     private val distance: String
 

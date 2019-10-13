@@ -19,5 +19,6 @@
     <string name="duration_toggles">Длительность</string>
     <string name="streams_toggle">Кол-во потоков</string>
     <string name="iperfMenu">iperf</string>
+    <string name="channel_short_name">CH</string>
 
 </resources>

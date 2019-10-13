@@ -11,6 +11,7 @@ class FileUtils private constructor() {
 
     companion object {
 
+        @JvmStatic
         fun readFile(resources: Resources, @RawRes id: Int): String {
             try {
                 resources.openRawResource(id).use { inputStream ->

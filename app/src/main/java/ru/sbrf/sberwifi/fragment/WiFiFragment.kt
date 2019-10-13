@@ -7,16 +7,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.ResultWiFi
 import ru.sbrf.sberwifi.livemodel.DetectorViewModel
 import ru.sbrf.sberwifi.view.ParallaxScrollListView
 import ru.sbrf.sberwifi.wifi.model.WiFiData
+import ru.sbrf.sberwifi.wifi.model.WifiAdapter
 
 // the fragment initialization parameters
 private const val VIEW_MODEL_PARAM = "listData"
@@ -61,27 +60,24 @@ class WiFiFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this).get(DetectorViewModel::class.java)
 
-        viewModel!!.getResultScanLiveData().observe(this, Observer {
-            val listWiFi = ArrayList<ItemListWifi>()
+        val adapter = WifiAdapter(this, context!!)
+        list?.adapter = adapter
 
-            for (item in it.getWiFiDetails()) {
-                listWiFi.add(ItemListWifi(item.ssid, item.wiFiSignal.level))
-            }
+        /* list?.adapter = adapter
+         viewModel!!.getResultScanLiveData().observe(this, Observer {
+             *//* val listWiFi = ArrayList<ItemListWifi>()
 
-            val adapter = ArrayAdapter(this.context!!,
-                    android.R.layout.simple_expandable_list_item_1,
-                    listWiFi)
+             for (item in it.getWiFiDetails()) {
+                 listWiFi.add(ItemListWifi(item.ssid, item.wiFiSignal.level))
+             }
+
+             val adapter = ArrayAdapter(this.context!!,
+                     android.R.layout.simple_expandable_list_item_1,
+                     listWiFi)*//*
+            val adapter = WifiAdapter(this, context!!, it.getWiFiDetails())
 
             list?.adapter = adapter
-        })
-
-        /*initTempPath()
-        val thread = Thread {
-            //Test.test()
-            start("10.8.37.50", 8090)
-        }
-        thread.start()*/
-
+        })*/
         return viewFragment
     }
 
@@ -131,9 +127,5 @@ class WiFiFragment : Fragment() {
 
         @JvmStatic
         fun newInstance() = WiFiFragment()
-
-        init {
-            System.loadLibrary("iperf")
-        }
     }
 }

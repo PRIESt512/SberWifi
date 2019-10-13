@@ -14,12 +14,16 @@ public class DetectorViewModel(application: Application) : AndroidViewModel(appl
 
     private val wifiScan: WiFiScanLiveData = WiFiScanLiveData(application.applicationContext)
     private val resultScanLiveData: MutableLiveData<WiFiData> = MutableLiveData()
-    private val resultScanObserver: Observer<WiFiData> = Observer { resultScanLiveData.value = it }
+    private val resultScanObserver: Observer<WiFiData>
     private val scanMediatorLiveData: MediatorLiveData<WiFiData> = MediatorLiveData()
 
     private val transformer: Transformer = Transformer()
 
     init {
+        resultScanObserver = Observer {
+            resultScanLiveData.value = it
+        }
+
         scanMediatorLiveData.addSource(wifiScan) {
             val wiFiData = transformer.transformToWiFiData(it.scanResult, it.wifiInfo)
             scanMediatorLiveData.value = wiFiData
@@ -29,9 +33,5 @@ public class DetectorViewModel(application: Application) : AndroidViewModel(appl
 
     public fun getResultScanLiveData(): MutableLiveData<WiFiData> {
         return resultScanLiveData
-    }
-
-    fun transformer() {
-
     }
 }

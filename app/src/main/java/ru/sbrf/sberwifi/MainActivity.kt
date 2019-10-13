@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val mainContext = MainContext.INSTANCE
+        mainContext.initialize(this)
         //subscribeUpdateScanData()
         supportActionBar?.hide()
 

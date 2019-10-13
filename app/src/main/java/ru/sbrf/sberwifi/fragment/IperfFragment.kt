@@ -137,8 +137,9 @@ class IperfFragment : Fragment() {
         startStopButton?.setOnSwipeCompleteListener_forward_reverse(object : OnSwipeCompleteListener {
             override fun onSwipe_Forward(swipe_button_view: Swipe_Button_View?) {
                 if (inputHost == null || inputPort == null) {
-                    Toast.makeText(view.context, "Введите host и port  удаленной машины", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(view.context, "Введите host и port удаленной машины", Toast.LENGTH_SHORT).show()
                     startStopButton?.setreverse_0()
+
                     return
                 }
                 jobTest = GlobalScope.launch {
@@ -146,8 +147,8 @@ class IperfFragment : Fragment() {
                     startAsync(inputHost!!, inputPort!!.toInt(), duration, streams)
                 }
                 Toast.makeText(view.context, "Запущен тест: длительность - $duration сек, потоков - $streams", Toast.LENGTH_SHORT).show()
+                resultTest.visibility = View.GONE
                 animationTest.visibility = View.VISIBLE
-                resultTest.visibility = View.VISIBLE
                 startStopButton?.setText("Остановить тест iperf")
                 startStopButton?.setThumbBackgroundColor(ContextCompat.getColor(view.context, R.color.material_red400))
                 startStopButton?.setSwipeBackgroundColor(ContextCompat.getColor(view.context, R.color.material_red500))
@@ -195,7 +196,7 @@ class IperfFragment : Fragment() {
                     //"Скорость передачи данных МБ/с ${speedTest / 800000000} \n" +
                     "Нагрузка на процессор: $cpuUtilTest%"
             MainScope().launch {
-                animationTest.visibility = View.INVISIBLE
+                animationTest.visibility = View.GONE
                 startStopButton?.setText("Запустить тест iperf")
                 startStopButton?.setThumbBackgroundColor(ContextCompat.getColor(view!!.context, R.color.material_green400))
                 startStopButton?.setSwipeBackgroundColor(ContextCompat.getColor(view!!.context, R.color.material_green500))
