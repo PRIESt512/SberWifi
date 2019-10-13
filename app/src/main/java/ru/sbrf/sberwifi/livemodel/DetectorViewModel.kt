@@ -2,7 +2,9 @@ package ru.sbrf.sberwifi.livemodel
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.sbrf.sberwifi.wifi.model.WiFiData
 
