@@ -1,7 +1,6 @@
 package ru.sbrf.sberwifi.wifi.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.CompareToBuilder
 import org.apache.commons.lang3.builder.EqualsBuilder
@@ -10,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 import java.util.*
 
 @Serializable
-class WiFiDetail @JvmOverloads constructor(@Transient private val SSID: String = StringUtils.EMPTY,
+class WiFiDetail @JvmOverloads constructor(val SSID: String = StringUtils.EMPTY,
                                            val bssid: String,
                                            val capabilities: String,
                                            val wiFiSignal: WiFiSignal,
@@ -21,15 +20,17 @@ class WiFiDetail @JvmOverloads constructor(@Transient private val SSID: String =
     val security = Security.findOne(capabilities)
 
     val ssid: String
+        get() {
+            return if (isHidden) SSID_EMPTY else SSID
+        }
 
     val isHidden = StringUtils.isBlank(SSID)
 
     val title: String
-        get() = String.format("%s (%s)", ssid, bssid)
 
     init {
         this.children = ArrayList()
-        this.ssid = if (isHidden) SSID_EMPTY else SSID
+        this.title = String.format("%s (%s)", ssid, bssid)
     }
 
     constructor(wiFiDetail: WiFiDetail, wiFiAdditional: WiFiAdditional) : this(wiFiDetail.SSID, wiFiDetail.bssid, wiFiDetail.capabilities, wiFiDetail.wiFiSignal, wiFiAdditional) {}
@@ -79,7 +80,7 @@ class WiFiDetail @JvmOverloads constructor(@Transient private val SSID: String =
 
     companion object {
         val EMPTY = WiFiDetail(StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, WiFiSignal.EMPTY)
-        private val SSID_EMPTY = "***"
+        private const val SSID_EMPTY = "***"
     }
 
 }

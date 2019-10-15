@@ -27,7 +27,7 @@ class WiFiSignal(val primaryFrequency: Int, val centerFrequency: Int, val wiFiWi
 
     private val distance: String
 
-    private val channelDisplay: String
+    public val channelDisplay: String
 
     init {
         this.primaryWiFiChannel = wiFiBand.wiFiChannels.getWiFiChannelByFrequency(primaryFrequency)

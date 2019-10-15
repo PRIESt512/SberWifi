@@ -37,7 +37,7 @@ public class DetectorViewModel(application: Application) : AndroidViewModel(appl
         scanMediatorLiveData.observeForever(resultScanObserver)
     }
 
-    private suspend fun transform(scan: WiFiScanLiveData.WiFiScan) = withContext(Dispatchers.Default) {
+    private suspend fun transform(scan: WiFiScan) = withContext(Dispatchers.Default) {
         Log.i("Detector", Thread.currentThread().name)
 
         return@withContext transformer.transformToWiFiData(scan.scanResult, scan.wifiInfo)

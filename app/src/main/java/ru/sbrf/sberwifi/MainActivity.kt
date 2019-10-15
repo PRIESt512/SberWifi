@@ -59,31 +59,19 @@ class MainActivity : AppCompatActivity(),
 
             val selectedFragment: Fragment? = when (it.itemId) {
                 R.id.navigation_wifi -> {
-                    if (currentFragment != null)
-                        FragmentStateHelper.INSTANCE?.saveState(currentFragment!!, currentSelectItemId.toString())
-                    currentFragment = WiFiFragment.newInstance()
-                    fragmentStateHelper.restoreState(currentFragment!!, it.itemId.toString())
-                    onActivityAttachFragment(currentFragment!!)
-                    currentSelectItemId = it.itemId
-                    currentFragment!!
+                    val newFragment = WiFiFragment.newInstance()
+                    replaceFragment(newFragment, it.itemId)
+                    newFragment
                 }
                 R.id.navigation_report -> {
-                    if (currentFragment != null)
-                        FragmentStateHelper.INSTANCE?.saveState(currentFragment!!, currentSelectItemId.toString())
-                    currentFragment = ReportFragment.newInstance()
-                    fragmentStateHelper.restoreState(currentFragment!!, it.itemId.toString())
-                    onActivityAttachFragment(currentFragment!!)
-                    currentSelectItemId = it.itemId
-                    currentFragment!!
+                    val newFragment = ReportFragment.newInstance()
+                    replaceFragment(newFragment, it.itemId)
+                    newFragment
                 }
                 R.id.navigation_iperf -> {
-                    if (currentFragment != null)
-                        FragmentStateHelper.INSTANCE?.saveState(currentFragment!!, currentSelectItemId.toString())
-                    currentFragment = IperfFragment.newInstance()
-                    fragmentStateHelper.restoreState(currentFragment!!, it.itemId.toString())
-                    onActivityAttachFragment(currentFragment!!)
-                    currentSelectItemId = it.itemId
-                    currentFragment!!
+                    val newFragment = IperfFragment.newInstance()
+                    replaceFragment(newFragment, it.itemId)
+                    newFragment
                 }
                 else -> throw UnsupportedOperationException("Невозможно выбрать фрагмент для отображения")
             }
@@ -92,6 +80,15 @@ class MainActivity : AppCompatActivity(),
             transaction.commit()
             true
         }
+    }
+
+    private fun replaceFragment(newFragment: Fragment, newFragmentId: Int) {
+        if (currentFragment != null)
+            FragmentStateHelper.INSTANCE?.saveState(currentFragment!!, currentSelectItemId.toString())
+        fragmentStateHelper.restoreState(newFragment, newFragmentId.toString())
+        onActivityAttachFragment(newFragment)
+        currentSelectItemId = newFragmentId
+        currentFragment = newFragment
     }
 
     /*override fun onSaveInstanceState(outState: Bundle) {
