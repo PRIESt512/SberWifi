@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.wifi.ScanResult
-import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -13,7 +11,7 @@ import androidx.lifecycle.LiveData
 /**
  * Класс-источник данных результатов сканирования WiFi-данных по event-системы
  */
-public class WiFiScanLiveData(private val context: Context) : LiveData<WiFiScanLiveData.WiFiScan>() {
+public class WiFiScanLiveData(private val context: Context) : LiveData<WiFiScan>() {
     private var broadcastReceiver: BroadcastReceiver? = null
 
     private fun prepareReceiver(context: Context) {
@@ -24,15 +22,7 @@ public class WiFiScanLiveData(private val context: Context) : LiveData<WiFiScanL
 
             override fun onReceive(context: Context, intent: Intent) {
                 val success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)
-                if (success) {
-                    Log.i("Scan", "Success")
-                    Log.i("LiveData", Thread.currentThread().name)
-
-                    scanSuccess(wifi)
-                } else {
-                    Log.e("Scan", "Error")
-                    scanFailure(wifi)
-                }
+                handlerResultScan(success, wifi)
             }
         }
 
@@ -41,8 +31,28 @@ public class WiFiScanLiveData(private val context: Context) : LiveData<WiFiScanL
         context.registerReceiver(wifiScanReceiver, intentFilter)
     }
 
+    /**
+     * Выполняем первое принудительное сканирование WiFi-сетей
+     */
+    private fun primaryScan() {
+        val wifi = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val success = wifi.startScan()
+        handlerResultScan(success, wifi)
+    }
+
+    fun handlerResultScan(success: Boolean, wifi: WifiManager) {
+        if (success) {
+            Log.i("Scan", "Success")
+            scanSuccess(wifi)
+        } else {
+            Log.e("Scan", "Error")
+            scanFailure(wifi)
+        }
+    }
+
     override fun onActive() {
         super.onActive()
+        primaryScan()
         prepareReceiver(context)
     }
 
@@ -66,6 +76,4 @@ public class WiFiScanLiveData(private val context: Context) : LiveData<WiFiScanL
         // consider using old scan results: these are the OLD results!
         val results = wifiManager.scanResults
     }
-
-    public class WiFiScan(val scanResult: List<ScanResult>, val wifiInfo: WifiInfo)
 }

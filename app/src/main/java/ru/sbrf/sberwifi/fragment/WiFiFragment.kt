@@ -2,23 +2,23 @@ package ru.sbrf.sberwifi.fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import ru.sbrf.sberwifi.R
-import ru.sbrf.sberwifi.ResultWiFi
-import ru.sbrf.sberwifi.livemodel.DetectorViewModel
 import ru.sbrf.sberwifi.view.ParallaxScrollListView
 import ru.sbrf.sberwifi.wifi.model.WiFiData
+import ru.sbrf.sberwifi.wifi.model.WiFiDetail
 import ru.sbrf.sberwifi.wifi.model.WifiAdapter
 
 // the fragment initialization parameters
-private const val VIEW_MODEL_PARAM = "listData"
+private const val VIEW_MODEL_PARAM = "listWiFi"
 
 /**
  * A simple [Fragment] subclass.
@@ -32,14 +32,15 @@ class WiFiFragment : Fragment() {
     private var callback: OnWifiInteractionListener? = null
 
     private var list: ParallaxScrollListView? = null
-    private var viewModel: DetectorViewModel? = null
 
-    private var list4Report: List<ResultWiFi>? = null
+    private var wifiAdapter: WifiAdapter? = null
+
+    private val json = Json(JsonConfiguration.Stable)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            list4Report = it.getParcelableArrayList(VIEW_MODEL_PARAM)
+            //list4Report = it.getParcelableArrayList(VIEW_MODEL_PARAM)
         }
     }
 
@@ -49,19 +50,23 @@ class WiFiFragment : Fragment() {
         // Inflate the layout for this fragment
         val viewFragment = inflater.inflate(R.layout.fragment_wifi, container, false)
 
-        list = viewFragment.findViewById(R.id.layout_listwifi)
-        list?.setZoomRatio(ParallaxScrollListView.ZOOM_X2)
-
         val header = LayoutInflater.from(this.context).inflate(R.layout.listview_header, null)
         val mImageView = header.findViewById(R.id.layout_header_image) as ImageView
 
+        list = viewFragment.findViewById(R.id.layout_listwifi)
+        list?.setZoomRatio(ParallaxScrollListView.ZOOM_X2)
         list?.setParallaxImageView(mImageView)
         list?.addHeaderView(header)
 
-        viewModel = ViewModelProviders.of(this).get(DetectorViewModel::class.java)
+        val savedListWiFi = savedInstanceState?.getString(VIEW_MODEL_PARAM)
+        wifiAdapter = if (savedListWiFi != null) {
+            val wifi = json.parse(WifiSave.serializer(), savedListWiFi)
+            WifiAdapter(this, context!!, wifi.listWifi)
+        } else {
+            WifiAdapter(this, context!!)
+        }
 
-        val adapter = WifiAdapter(this, context!!)
-        list?.adapter = adapter
+        list?.adapter = wifiAdapter
         return viewFragment
     }
 
@@ -78,13 +83,21 @@ class WiFiFragment : Fragment() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (wifiAdapter?.wifiDetails?.isEmpty()!!)
+            return
+        val report = json.stringify(WifiSave.serializer(), WifiSave(wifiAdapter?.wifiDetails!!))
+        outState.putString(VIEW_MODEL_PARAM, report)
+    }
+
     override fun onDetach() {
         super.onDetach()
         callback = null
     }
 
     interface OnWifiInteractionListener {
-        fun onFragmentInteraction(uri: Uri)
+        fun onFragmentInteraction(wiFiDetail: WiFiDetail)
     }
 
     private class ItemListWifi(val SSID: String, val level: Int) {
@@ -92,6 +105,9 @@ class WiFiFragment : Fragment() {
             return String.format("SSID: %s, Level: %sdBm", SSID, level)
         }
     }
+
+    @Serializable
+    private inner class WifiSave(val listWifi: List<WiFiDetail>)
 
     companion object {
         /**

@@ -2,7 +2,7 @@ package ru.sbrf.sberwifi.wifi.model
 
 import ru.sbrf.sberwifi.R
 
-enum class Strength private constructor(private val imageResource: Int, private val colorResource: Int) {
+enum class Strength constructor(private val imageResource: Int, private val colorResource: Int) {
     ZERO(R.drawable.ic_signal_wifi_0_bar, R.color.error),
     ONE(R.drawable.ic_signal_wifi_1_bar, R.color.warning),
     TWO(R.drawable.ic_signal_wifi_2_bar, R.color.warning),

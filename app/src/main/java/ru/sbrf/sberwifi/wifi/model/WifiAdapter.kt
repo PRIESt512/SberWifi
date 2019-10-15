@@ -19,13 +19,15 @@ import ru.sbrf.sberwifi.livemodel.DetectorViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class WifiAdapter(fragment: Fragment, context: Context, wifiDetails: List<WiFiDetail> = ArrayList(15), resource: Int = R.layout.wifi_list_menu) :
+class WifiAdapter(fragment: Fragment, context: Context, val wifiDetails: List<WiFiDetail> = ArrayList(15), resource: Int = R.layout.wifi_list_menu) :
         ArrayAdapter<WiFiDetail>(context, resource, wifiDetails) {
 
     private val channelRating: ChannelRating = ChannelRating()
     private val viewModel = ViewModelProviders.of(fragment).get(DetectorViewModel::class.java)
 
     init {
+        channelRating.setWiFiDetails(this.wifiDetails)
+
         viewModel.resultScanLiveData.observe(fragment, Observer {
             this.clear()
             this.addAll(it.getWiFiDetails())
@@ -60,7 +62,7 @@ class WifiAdapter(fragment: Fragment, context: Context, wifiDetails: List<WiFiDe
         viewHolder.capabilities.text = wifiDetail.capabilities
 
         viewHolder.ssid_and_mac.text = wifiDetail.title
-        viewHolder.channel.text = String.format(Locale.ENGLISH, "%d", wifiDetail.wiFiSignal.primaryWiFiChannel.channel)
+        viewHolder.channel.text = String.format(Locale.ENGLISH, "%s", wifiDetail.wiFiSignal.channelDisplay)
         viewHolder.primaryFrequency.text = String.format(Locale.ENGLISH, "%d МГц |", wifiDetail.wiFiSignal.primaryWiFiChannel.frequency)
         viewHolder.channel_frequency_range.text = String.format(Locale.ENGLISH, "%d - %d", wifiDetail.wiFiSignal.frequencyStart, wifiDetail.wiFiSignal.frequencyEnd)
         viewHolder.width.text = String.format(Locale.ENGLISH, "(%d%s)", wifiDetail.wiFiSignal.wiFiWidth.frequencyWidth, WiFiSignal.FREQUENCY_UNITS)
