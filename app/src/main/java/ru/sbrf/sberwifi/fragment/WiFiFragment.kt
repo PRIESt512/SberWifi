@@ -6,8 +6,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
+import android.widget.AbsListView
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -31,6 +35,8 @@ private const val VIEW_MODEL_PARAM = "listWiFi"
 class WiFiFragment : Fragment() {
     private var callback: OnWifiInteractionListener? = null
 
+    private var myContext: FragmentActivity? = null
+
     private var list: ParallaxScrollListView? = null
 
     private var wifiAdapter: WifiAdapter? = null
@@ -51,7 +57,7 @@ class WiFiFragment : Fragment() {
         val viewFragment = inflater.inflate(R.layout.fragment_wifi, container, false)
 
         val header = LayoutInflater.from(this.context).inflate(R.layout.listview_header, null)
-        val mImageView = header.findViewById(R.id.layout_header_image) as ImageView
+        val mImageView = header.findViewById<ImageView>(R.id.layout_header_image)
 
         list = viewFragment.findViewById(R.id.layout_listwifi)
         list?.setZoomRatio(ParallaxScrollListView.ZOOM_X2)
@@ -67,6 +73,39 @@ class WiFiFragment : Fragment() {
         }
 
         list?.adapter = wifiAdapter
+
+        list?.setOnItemClickListener { _, _, position, _ ->
+            val transaction = myContext?.supportFragmentManager?.beginTransaction()!!
+            val fragment = DetailInfoFragment.newInstance(json.stringify(WiFiDetail.serializer(), wifiAdapter?.getItem(position)!!))
+            transaction.replace(R.id.frame_layout, fragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
+        list?.setOnScrollListener(object : AbsListView.OnScrollListener {
+
+            var isUp = false
+
+            override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
+            }
+
+            override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+                when (view?.id) {
+                    R.id.layout_listwifi -> {
+                        val lastItem = firstVisibleItem + visibleItemCount
+                        if ((lastItem == totalItemCount && !isUp)) {
+                            isUp = true
+                            val context = list?.context
+                            val controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down) as LayoutAnimationController
+                            list?.layoutAnimation = controller
+                            list?.scheduleLayoutAnimation()
+                        } else {
+                            isUp = false
+                        }
+                    }
+                }
+            }
+        })
         return viewFragment
     }
 
@@ -76,6 +115,13 @@ class WiFiFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+        myContext = when (context) {
+            is FragmentActivity -> {
+                context
+            }
+            else -> throw RuntimeException("Не удалось получить основной контекст")
+        }
         if (context is OnWifiInteractionListener) {
             callback = context
         } else {
@@ -98,12 +144,6 @@ class WiFiFragment : Fragment() {
 
     interface OnWifiInteractionListener {
         fun onFragmentInteraction(wiFiDetail: WiFiDetail)
-    }
-
-    private class ItemListWifi(val SSID: String, val level: Int) {
-        override fun toString(): String {
-            return String.format("SSID: %s, Level: %sdBm", SSID, level)
-        }
     }
 
     @Serializable

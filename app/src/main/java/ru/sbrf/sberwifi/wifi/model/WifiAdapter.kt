@@ -85,8 +85,8 @@ class WifiAdapter(fragment: Fragment, context: Context, val wifiDetails: List<Wi
         constructor(view: View) : this(
                 view.findViewById<ImageView>(R.id.levelImage), view.findViewById<TextView>(R.id.level),
                 view.findViewById<TextView>(R.id.capabilities), view.findViewById<TextView>(R.id.ssid_and_mac),
-                view.findViewById<TextView>(R.id.channel), view.findViewById<TextView>(R.id.primaryFrequency),
-                view.findViewById<TextView>(R.id.channel_frequency_range), view.findViewById<TextView>(R.id.width),
+                view.findViewById<TextView>(R.id.name_channel), view.findViewById<TextView>(R.id.primaryFrequency),
+                view.findViewById<TextView>(R.id.name_channel_frequency_range), view.findViewById<TextView>(R.id.width),
                 view.findViewById<RatingBar>(R.id.channel_rating))
     }
 }

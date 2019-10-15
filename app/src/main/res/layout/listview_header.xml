@@ -9,6 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_default_height"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/sber"
+        app:srcCompat="@drawable/sber2"
         android:contentDescription="@string/headerListView" />
 </RelativeLayout>

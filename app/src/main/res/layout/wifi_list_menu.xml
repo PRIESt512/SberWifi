@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:animateLayoutChanges="true">
 
     <!-- Column 1 -->
     <TextView
@@ -84,7 +85,7 @@
                         android:textColor="@color/channel" />
 
                     <TextView
-                        android:id="@+id/channel"
+                        android:id="@+id/name_channel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
@@ -100,7 +101,7 @@
                         android:textColor="@color/frequency" />
 
                     <TextView
-                        android:id="@+id/channel_frequency_range"
+                        android:id="@+id/name_channel_frequency_range"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"

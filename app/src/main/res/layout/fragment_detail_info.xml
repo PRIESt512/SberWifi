@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="11dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="10dp"
+    android:columnCount="2"
+    tools:context=".fragment.DetailInfoFragment">
+
+    <TextView
+        style="@style/TextAppearance.AppCompat.Widget.ActionMode.Title"
+        android:layout_column="0"
+        android:layout_columnSpan="2"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/parameters_ap">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/name_ssid"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_width="150dp"
+        android:layout_column="0"
+        android:text="@string/name_detail_ssid" />
+
+    <TextView
+        android:id="@+id/ssid"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="1"
+        android:layout_gravity="fill_horizontal" />
+
+    <TextView
+        android:id="@+id/name_mac"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="0"
+        android:layout_gravity="fill_horizontal"
+        android:text="@string/name_mac" />
+
+    <TextView
+        android:id="@+id/mac"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="1"
+        android:layout_gravity="fill_horizontal"
+        android:layout_marginBottom="5dp" />
+
+    <TextView
+        android:id="@+id/name_central_frequency"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="0"
+        android:layout_gravity="fill_horizontal"
+        android:text="@string/name_central_frequency" />
+
+    <TextView
+        android:id="@+id/central_frequency"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="1"
+        android:layout_gravity="fill_horizontal" />
+
+    <TextView
+        android:id="@+id/name_channel_frequency_range"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="0"
+        android:layout_gravity="fill_horizontal"
+        android:text="@string/name_frequency_range" />
+
+    <TextView
+        android:id="@+id/channel_frequency_range"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="1"
+        android:layout_gravity="fill_horizontal" />
+
+    <TextView
+        android:id="@+id/name_channel"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="0"
+        android:layout_gravity="fill_horizontal"
+        android:text="@string/name_channel" />
+
+    <TextView
+        android:id="@+id/channel"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="1"
+        android:layout_gravity="fill_horizontal"
+        android:layout_marginBottom="5dp" />
+
+    <TextView
+        android:id="@+id/name_bandwidth"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="0"
+        android:layout_gravity="fill_horizontal"
+        android:text="@string/name_bandwidth" />
+
+    <TextView
+        android:id="@+id/bandwidth"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="1"
+        android:layout_gravity="fill_horizontal" />
+
+    <TextView
+        android:id="@+id/name_type_wifi"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="0"
+        android:layout_gravity="fill_horizontal"
+        android:text="@string/type_channel" />
+
+    <TextView
+        android:id="@+id/type_wifi"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_column="1"
+        android:layout_gravity="fill_horizontal" />
+
+</GridLayout>

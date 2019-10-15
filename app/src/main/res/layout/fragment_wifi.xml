@@ -15,6 +15,9 @@
         android:headerDividersEnabled="false"
         android:overScrollMode="never"
         android:scrollbars="none"
-        android:scrollingCache="false" />
+        android:scrollingCache="false"
+        android:layoutAnimation="@anim/layout_animation_fall_down"
+        android:divider="@drawable/separator_line"
+        android:dividerHeight="10.0dp" />
 
 </FrameLayout>
