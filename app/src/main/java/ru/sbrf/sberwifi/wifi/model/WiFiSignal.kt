@@ -13,7 +13,7 @@ import java.util.*
 
 @Serializable
 class WiFiSignal(val primaryFrequency: Int, val centerFrequency: Int, val wiFiWidth: WiFiWidth, val level: Int, val is80211mc: Boolean) {
-    val wiFiBand: WiFiBand = EnumUtils.find(WiFiBand::class.java, FrequencyPredicate(primaryFrequency), WiFiBand.GHZ2)
+    public val wiFiBand: WiFiBand = EnumUtils.find(WiFiBand::class.java, FrequencyPredicate(primaryFrequency), WiFiBand.GHZ2)
 
     public val frequencyStart: Int = centerFrequency - wiFiWidth.frequencyWidthHalf
 
@@ -25,7 +25,7 @@ class WiFiSignal(val primaryFrequency: Int, val centerFrequency: Int, val wiFiWi
 
     public val strength: Strength
 
-    private val distance: String
+    public val distance: String
 
     public val channelDisplay: String
 

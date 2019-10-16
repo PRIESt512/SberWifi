@@ -22,11 +22,13 @@
     <string name="channel_short_name">CH</string>
     <string name="name_detail_ssid">Имя сети (SSID)</string>
     <string name="name_mac">MAC адрес</string>
-    <string name="name_central_frequency">Цент. частота</string>
+    <string name="name_central_frequency">Центральная частота</string>
     <string name="name_frequency_range">Диапазон частот</string>
     <string name="name_channel">Канал</string>
     <string name="name_bandwidth">Ширина канала</string>
     <string name="parameters_ap">Параметры AP</string>
     <string name="type_channel">Тип канала</string>
+    <string name="distance">Расстояние до AP</string>
+    <string name="vendor">Производитель</string>
 
 </resources>

@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
+import ru.sbrf.sberwifi.MainContext
 import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.wifi.model.WiFiDetail
 import ru.sbrf.sberwifi.wifi.model.WiFiSignal
@@ -48,8 +49,16 @@ class DetailInfoFragment : Fragment() {
         view.findViewById<TextView>(R.id.channel_frequency_range).text = String.format(Locale.ENGLISH, "%d Мгц - %d Мгц", wifiDetail.wiFiSignal.frequencyStart, wifiDetail.wiFiSignal.frequencyEnd)
         view.findViewById<TextView>(R.id.channel).text = wifiDetail.wiFiSignal.channelDisplay
         view.findViewById<TextView>(R.id.bandwidth).text = String.format(Locale.ENGLISH, "%d%s", wifiDetail.wiFiSignal.wiFiWidth.frequencyWidth, WiFiSignal.FREQUENCY_UNITS)
-        view.findViewById<TextView>(R.id.type_wifi).text = if (wifiDetail.wiFiSignal.wiFiBand.isGHZ5) "5 Ггц" else "2 Ггц"
+        view.findViewById<TextView>(R.id.type_wifi).text = if (wifiDetail.wiFiSignal.wiFiBand.isGHZ5) "5 ГГц" else "2 ГГц"
+        view.findViewById<TextView>(R.id.distance_wifi).text = wifiDetail.wiFiSignal.distance
+        view.findViewById<TextView>(R.id.vendor_wifi).text = MainContext.INSTANCE.vendorService.findVendorName(wifiDetail.bssid)
 
+        val viewGroup = view as ViewGroup
+        val insertPoint = inflater.inflate(R.layout.channel_rating_details, container, false)
+
+        insertPoint.findViewById<TextView>(R.id.channel_number).text = String.format(Locale.ENGLISH, "%d", wifiDetail.wiFiSignal.wiFiBand.wiFiChannels.wiFiChannelFirst)
+
+        viewGroup.addView(insertPoint, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
         return view
     }
