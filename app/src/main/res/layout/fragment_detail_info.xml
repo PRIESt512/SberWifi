@@ -1,231 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white_black"
-    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-    tools:context=".fragment.DetailInfoFragment">
+    android:layout_height="match_parent">
 
-    <TextView
-        style="@style/TextAppearance.AppCompat.Widget.ActionMode.Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingBottom="20dp"
-        android:text="@string/parameters_ap" />
-
-    <LinearLayout
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/detailContainer"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/rounded_border"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@color/white_black"
+        android:orientation="vertical"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        tools:context=".fragment.DetailInfoFragment">
 
         <TextView
-            android:id="@+id/name_ssid"
-            android:layout_width="match_parent"
+            style="@style/TextAppearance.AppCompat.Widget.ActionMode.Title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/name_detail_ssid"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="20dp"
+            android:text="@string/parameters_ap" />
 
-        <TextView
-            android:id="@+id/ssid"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_gravity="fill_horizontal"
-            android:textAppearance="?android:attr/textAppearanceListItemSecondary"
-            android:textColor="@color/white_black_text" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/rounded_border"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/name_mac"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/name_mac"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
-
-        <TextView
-            android:id="@+id/mac"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:textAppearance="?android:attr/textAppearanceListItemSecondary"
-            android:textColor="@color/white_black_text" />
+            android:background="@drawable/rounded_border"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/name_ssid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/name_detail_ssid"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
+            <TextView
+                android:id="@+id/ssid"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="fill_horizontal"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="@color/white_black_text" />
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_border"
-        android:layout_marginBottom="5dp">
-
-        <TextView
-            android:id="@+id/name_central_frequency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/name_central_frequency"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
-
-        <TextView
-            android:id="@+id/central_frequency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white_black_text"
-            android:textAppearance="?android:attr/textAppearanceListItemSecondary" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_border"
-        android:layout_marginBottom="5dp">
-
-        <TextView
-            android:id="@+id/name_channel_frequency_range"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:text="@string/name_frequency_range"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
-
-        <TextView
-            android:id="@+id/channel_frequency_range"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white_black_text"
-            android:textAppearance="?android:attr/textAppearanceListItemSecondary" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_border"
-        android:layout_marginBottom="5dp">
-
-        <TextView
-            android:id="@+id/name_channel"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/name_channel"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
-
-        <TextView
-            android:id="@+id/channel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_marginBottom="5dp"
-            android:textColor="@color/white_black_text"
-            android:textAppearance="?android:attr/textAppearanceListItemSecondary" />
+            android:background="@drawable/rounded_border"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/name_mac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name_mac"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+            <TextView
+                android:id="@+id/mac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="@color/white_black_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rounded_border"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name_central_frequency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name_central_frequency"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+            <TextView
+                android:id="@+id/central_frequency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="@color/white_black_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rounded_border"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name_channel_frequency_range"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill_horizontal"
+                android:text="@string/name_frequency_range"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+            <TextView
+                android:id="@+id/channel_frequency_range"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="@color/white_black_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rounded_border"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name_channel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/name_channel"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+            <TextView
+                android:id="@+id/channel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="@color/white_black_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rounded_border"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name_bandwidth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name_bandwidth"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+            <TextView
+                android:id="@+id/bandwidth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="@color/white_black_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rounded_border"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name_type_wifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/type_channel"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+            <TextView
+                android:id="@+id/type_wifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="@color/white_black_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rounded_border"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name_distance_wifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/distance"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+            <TextView
+                android:id="@+id/distance_wifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="@color/white_black_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rounded_border"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name_vendor_wifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/vendor"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+
+            <TextView
+                android:id="@+id/vendor_wifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+                android:textColor="@color/white_black_text" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_border"
-        android:layout_marginBottom="5dp">
-
-        <TextView
-            android:id="@+id/name_bandwidth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/name_bandwidth"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
-
-        <TextView
-            android:id="@+id/bandwidth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white_black_text"
-            android:textAppearance="?android:attr/textAppearanceListItemSecondary" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_border"
-        android:layout_marginBottom="5dp">
-
-        <TextView
-            android:id="@+id/name_type_wifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/type_channel"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
-
-        <TextView
-            android:id="@+id/type_wifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white_black_text"
-            android:textAppearance="?android:attr/textAppearanceListItemSecondary" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_border"
-        android:layout_marginBottom="5dp">
-
-        <TextView
-            android:id="@+id/name_distance_wifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/distance"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
-
-        <TextView
-            android:id="@+id/distance_wifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white_black_text"
-            android:textAppearance="?android:attr/textAppearanceListItemSecondary" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_border"
-        android:layout_marginBottom="5dp">
-
-        <TextView
-            android:id="@+id/name_vendor_wifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/vendor"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
-
-        <TextView
-            android:id="@+id/vendor_wifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white_black_text"
-            android:textAppearance="?android:attr/textAppearanceListItemSecondary" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

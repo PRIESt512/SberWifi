@@ -23,8 +23,8 @@ extern "C" {
  * @param streams количество одновременных потоков данных для тестирования
  */
 JNIEXPORT void JNICALL
-Java_ru_sbrf_sberwifi_fragment_WiFiFragment_start(JNIEnv *env, jobject thisObject, jstring host,
-                                                  jint port, jint duration, jint streams);
+Java_ru_sbrf_sberwifi_fragment_IperfFragment_start(JNIEnv *env, jobject thisObject, jstring host,
+                                                   jint port, jint duration, jint streams);
 
 /**
  * Получаем абсолютный путь до директории, которую iperf будет использовать для создания временных файлов
@@ -33,7 +33,7 @@ Java_ru_sbrf_sberwifi_fragment_WiFiFragment_start(JNIEnv *env, jobject thisObjec
  * @param thisObject - объект, который произвел вызов этого нативного метода
  */
 JNIEXPORT void JNICALL
-Java_ru_sbrf_sberwifi_fragment_WiFiFragment_initTempPath(JNIEnv *env, jobject thisObject);
+Java_ru_sbrf_sberwifi_fragment_IperfFragment_initTempPath(JNIEnv *env, jobject thisObject);
 #ifdef __cplusplus
 }
 #endif

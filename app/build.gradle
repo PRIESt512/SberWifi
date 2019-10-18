@@ -2,10 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlinx-serialization'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+    dataBinding {
+        enabled = true
+    }
     defaultConfig {
         applicationId "ru.sbrf.sberwifi"
         minSdkVersion 26
@@ -61,8 +65,8 @@ dependencies {
     implementation 'com.github.gratusik:AGIKSwipeButton:1.0.1'
     implementation 'com.jayway.jsonpath:json-path:2.4.0'
     implementation 'com.agrawalsuneet.androidlibs:squareloaderspack:0.5'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-alpha05'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha05'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-beta01'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-beta01'
     implementation 'com.google.android.material:material:1.0.0'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

@@ -23,14 +23,18 @@ import com.jayway.jsonpath.JsonPath
 import com.savvyapps.togglebuttonlayout.ToggleButtonLayout
 import kotlinx.coroutines.*
 import ru.sbrf.sberwifi.R
+import kotlin.coroutines.CoroutineContext
 
-class IperfFragment : Fragment() {
+class IperfFragment : Fragment(), CoroutineScope {
+
+    private lateinit var job: Job
+
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.Main
 
     lateinit var animationTest: WaveLoader
 
     lateinit var resultTest: TextView
-
-    var jobTest: Job? = null
 
     var duration: Int = 5
 
@@ -42,20 +46,29 @@ class IperfFragment : Fragment() {
 
     var startStopButton: Swipe_Button_View? = null
 
+    lateinit var currentView: View
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        job = Job()
+        initTempPath()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val view = inflater.inflate(R.layout.fragment_iperf, container, false)
+        currentView = inflater.inflate(R.layout.fragment_iperf, container, false)
 
-        animationTest = view.findViewById(R.id.animationTest)
+        animationTest = currentView.findViewById(R.id.animationTest)
         animationTest.visibility = View.GONE
-        val inputPortText = view.findViewById<EditText>(R.id.inputPort)
-        val inputHostText = view.findViewById<EditText>(R.id.inputHost)
-        resultTest = view.findViewById(R.id.resultTest)
+        val inputPortText = currentView.findViewById<EditText>(R.id.inputPort)
+        val inputHostText = currentView.findViewById<EditText>(R.id.inputHost)
+        resultTest = currentView.findViewById(R.id.resultTest)
         resultTest.visibility = View.GONE
 
         inputPortText.addTextChangedListener(object : TextWatcher {
@@ -92,10 +105,10 @@ class IperfFragment : Fragment() {
             streamsIperfTest.add(SpinnerModel("$i поток(-ов)"))
         }
 
-        val durationsIpefTest: ArrayList<SpinnerModel> = ArrayList()
+        val durationsIperfTest: ArrayList<SpinnerModel> = ArrayList()
 
         for (i in 5..60 step 5) {
-            durationsIpefTest.add(SpinnerModel("$i секунд"))
+            durationsIperfTest.add(SpinnerModel("$i секунд"))
         }
 
         val spinnerStreams =
@@ -103,7 +116,7 @@ class IperfFragment : Fragment() {
                         "Spinner Dialog", streamsIperfTest,
                         object : OnSpinnerOKPressedListener {
                             override fun onItemSelect(data: SpinnerModel, selectedPosition: Int) {
-                                Toast.makeText(view.context, data.text, Toast.LENGTH_LONG).show()
+                                Toast.makeText(currentView.context, data.text, Toast.LENGTH_LONG).show()
                                 streams = selectedPosition + 1
                             }
 
@@ -111,17 +124,16 @@ class IperfFragment : Fragment() {
                 )
 
         val spinnerDurations = SpinnerDialogFragment.newInstance(
-                "Spinner Dialog", durationsIpefTest,
+                "Spinner Dialog", durationsIperfTest,
                 object : OnSpinnerOKPressedListener {
                     override fun onItemSelect(data: SpinnerModel, selectedPosition: Int) {
                         duration = selectedPosition * 5 + 5
-                        Toast.makeText(view.context, data.text, Toast.LENGTH_LONG).show()
+                        Toast.makeText(currentView.context, data.text, Toast.LENGTH_LONG).show()
                     }
-
                 }, 0
         )
 
-        val toggle = view.findViewById<ToggleButtonLayout>(R.id.toggleButtonLayoutTextIperf)
+        val toggle = currentView.findViewById<ToggleButtonLayout>(R.id.toggleButtonLayoutTextIperf)
         toggle?.onToggledListener = { _, toggle, selected ->
             when (toggle.id) {
                 R.id.toggle_left -> {
@@ -133,36 +145,49 @@ class IperfFragment : Fragment() {
             }
         }
 
-        startStopButton = view.findViewById<Swipe_Button_View>(R.id.start_stop)
+        startStopButton = currentView.findViewById<Swipe_Button_View>(R.id.start_stop)
         startStopButton?.setOnSwipeCompleteListener_forward_reverse(object : OnSwipeCompleteListener {
             override fun onSwipe_Forward(swipe_button_view: Swipe_Button_View?) {
                 if (inputHost == null || inputPort == null) {
-                    Toast.makeText(view.context, "Введите host и port удаленной машины", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(currentView.context, "Введите host и port удаленной машины", Toast.LENGTH_SHORT).show()
                     startStopButton?.setreverse_0()
-
                     return
                 }
-                jobTest = GlobalScope.launch {
-                    initTempPath()
-                    startAsync(inputHost!!, inputPort!!.toInt(), duration, streams)
+                launch {
+                    try {
+                        Toast.makeText(currentView.context, "Запущен тест: длительность - $duration сек, потоков - $streams", Toast.LENGTH_SHORT).show()
+                        iperfStartView(currentView)
+                        startAsync(inputHost!!, inputPort!!.toInt(), duration, streams)
+                    } catch (ex: java.lang.Exception) {
+                        iperfStop(currentView, View.GONE)
+                        startStopButton?.setreverse_0()
+                        startStopButton?.swipe_reverse = false
+                        Toast.makeText(currentView.context, "Ошибка iperf $ex", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                Toast.makeText(view.context, "Запущен тест: длительность - $duration сек, потоков - $streams", Toast.LENGTH_SHORT).show()
-                resultTest.visibility = View.GONE
-                animationTest.visibility = View.VISIBLE
-                startStopButton?.setText("Остановить тест iperf")
-                startStopButton?.setThumbBackgroundColor(ContextCompat.getColor(view.context, R.color.material_red400))
-                startStopButton?.setSwipeBackgroundColor(ContextCompat.getColor(view.context, R.color.material_red500))
             }
 
             override fun onSwipe_Reverse(swipe_button_view: Swipe_Button_View?) {
-                resultTest.visibility = View.GONE
-                animationTest.visibility = View.GONE
-                startStopButton?.setText("Запустить тест iperf")
-                startStopButton?.setThumbBackgroundColor(ContextCompat.getColor(view.context, R.color.material_green400))
-                startStopButton?.setSwipeBackgroundColor(ContextCompat.getColor(view.context, R.color.material_green500))
+                iperfStop(currentView, View.GONE)
             }
         })
-        return view
+        return currentView
+    }
+
+    private fun iperfStartView(view: View) {
+        resultTest.visibility = View.GONE
+        animationTest.visibility = View.VISIBLE
+        startStopButton?.setText("Остановить тест iperf")
+        startStopButton?.setThumbBackgroundColor(ContextCompat.getColor(view.context, R.color.material_red400))
+        startStopButton?.setSwipeBackgroundColor(ContextCompat.getColor(view.context, R.color.material_red500))
+    }
+
+    private fun iperfStop(view: View, resultTestVisibility: Int) {
+        resultTest.visibility = resultTestVisibility
+        animationTest.visibility = View.GONE
+        startStopButton?.setText("Запустить тест iperf")
+        startStopButton?.setThumbBackgroundColor(ContextCompat.getColor(view.context, R.color.material_green400))
+        startStopButton?.setSwipeBackgroundColor(ContextCompat.getColor(view.context, R.color.material_green500))
     }
 
     override fun onAttach(context: Context) {
@@ -195,15 +220,10 @@ class IperfFragment : Fragment() {
                     "Передано МБ: ${bytesTest / 1000000} \n" +
                     //"Скорость передачи данных МБ/с ${speedTest / 800000000} \n" +
                     "Нагрузка на процессор: $cpuUtilTest%"
-            MainScope().launch {
-                animationTest.visibility = View.GONE
-                startStopButton?.setText("Запустить тест iperf")
-                startStopButton?.setThumbBackgroundColor(ContextCompat.getColor(view!!.context, R.color.material_green400))
-                startStopButton?.setSwipeBackgroundColor(ContextCompat.getColor(view!!.context, R.color.material_green500))
-                startStopButton?.setreverse_0()
-
+            launch {
+                iperfStop(currentView, View.VISIBLE)
                 resultTest.text = result
-                resultTest.visibility = View.VISIBLE
+                startStopButton?.setreverse_0()
             }
         } catch (ex: Exception) {
             Log.e("Iperf", ex.toString())
@@ -211,17 +231,15 @@ class IperfFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         * @return A new instance of fragment IperfFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
                 IperfFragment().apply {
                     arguments = Bundle().apply {
                     }
                 }
+
+        init {
+            System.loadLibrary("iperf")
+        }
     }
 }

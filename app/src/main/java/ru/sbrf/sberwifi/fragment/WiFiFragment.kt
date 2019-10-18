@@ -84,8 +84,6 @@ class WiFiFragment : Fragment() {
 
         list?.setOnScrollListener(object : AbsListView.OnScrollListener {
 
-            var isUp = false
-
             override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
             }
 
@@ -93,14 +91,11 @@ class WiFiFragment : Fragment() {
                 when (view?.id) {
                     R.id.layout_listwifi -> {
                         val lastItem = firstVisibleItem + visibleItemCount
-                        if ((lastItem == totalItemCount && !isUp)) {
-                            isUp = true
+                        if ((lastItem == totalItemCount)) {
                             val context = list?.context
                             val controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down) as LayoutAnimationController
                             list?.layoutAnimation = controller
                             list?.scheduleLayoutAnimation()
-                        } else {
-                            isUp = false
                         }
                     }
                 }

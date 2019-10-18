@@ -64,6 +64,6 @@ Java_ru_sbrf_sberwifi_fragment_IperfFragment_start(JNIEnv *env, jobject thisObje
         __android_log_print(ANDROID_LOG_ERROR, APPNAME, "Error %s", e.what());
         std::string class_name = "java/net/ConnectException";
         jclass exClass = env->FindClass(class_name.c_str());
-        env->ThrowNew(exClass, "Connection refused");
+        env->ThrowNew(exClass, e.what());
     }
 }

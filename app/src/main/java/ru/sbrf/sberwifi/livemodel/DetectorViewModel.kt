@@ -1,7 +1,6 @@
 package ru.sbrf.sberwifi.livemodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,8 +37,6 @@ public class DetectorViewModel(application: Application) : AndroidViewModel(appl
     }
 
     private suspend fun transform(scan: WiFiScan) = withContext(Dispatchers.Default) {
-        Log.i("Detector", Thread.currentThread().name)
-
         return@withContext transformer.transformToWiFiData(scan.scanResult, scan.wifiInfo)
     }
 }

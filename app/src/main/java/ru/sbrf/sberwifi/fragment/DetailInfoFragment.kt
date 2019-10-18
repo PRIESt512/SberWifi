@@ -10,6 +10,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import ru.sbrf.sberwifi.MainContext
 import ru.sbrf.sberwifi.R
+import ru.sbrf.sberwifi.databinding.ChannelRatingDetailsBinding
 import ru.sbrf.sberwifi.wifi.model.WiFiDetail
 import ru.sbrf.sberwifi.wifi.model.WiFiSignal
 import java.util.*
@@ -19,9 +20,6 @@ private const val VIEW_MODEL_PARAM = "wifiChannel"
 
 /**
  * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [DetailInfoFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
  * Use the [DetailInfoFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
@@ -30,6 +28,8 @@ class DetailInfoFragment : Fragment() {
     private val json = Json(JsonConfiguration.Stable)
 
     private lateinit var wifiDetail: WiFiDetail
+
+    private lateinit var binding: ChannelRatingDetailsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,6 @@ class DetailInfoFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_detail_info, container, false)
 
         view.findViewById<TextView>(R.id.ssid).text = wifiDetail.SSID
@@ -53,12 +52,8 @@ class DetailInfoFragment : Fragment() {
         view.findViewById<TextView>(R.id.distance_wifi).text = wifiDetail.wiFiSignal.distance
         view.findViewById<TextView>(R.id.vendor_wifi).text = MainContext.INSTANCE.vendorService.findVendorName(wifiDetail.bssid)
 
-        val viewGroup = view as ViewGroup
-        val insertPoint = inflater.inflate(R.layout.channel_rating_details, container, false)
-
-        insertPoint.findViewById<TextView>(R.id.channel_number).text = String.format(Locale.ENGLISH, "%d", wifiDetail.wiFiSignal.wiFiBand.wiFiChannels.wiFiChannelFirst)
-
-        viewGroup.addView(insertPoint, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        val viewGroup = view.findViewById(R.id.detailContainer) as ViewGroup
+        viewGroup.addView(binding.root, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
         return view
     }
