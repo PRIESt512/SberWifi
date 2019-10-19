@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:id="@+id/detailContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +24,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_border"
             android:orientation="vertical">
@@ -46,7 +47,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="53dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_border"
             android:orientation="vertical">
@@ -70,7 +71,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_border"
             android:orientation="vertical">
@@ -93,7 +94,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_border"
             android:orientation="vertical">
@@ -117,7 +118,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="53dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_border"
             android:orientation="vertical">
@@ -141,7 +142,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_border"
             android:orientation="vertical">
@@ -164,7 +165,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_border"
             android:orientation="vertical">
@@ -187,7 +188,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_border"
             android:orientation="vertical">
@@ -210,7 +211,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_border"
             android:orientation="vertical">
@@ -231,11 +232,61 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listDetail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-        </androidx.recyclerview.widget.RecyclerView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/best_channel"
+                android:paddingStart="1.5dp"
+                android:paddingEnd="1.5dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/bestChannel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/list_view_item_horizontal_spacer"
+                android:layout_weight="1"
+                android:text="@string/channel_rating_heading_rating"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/list_view_item_horizontal_spacer"
+                android:layout_marginEnd="@dimen/list_view_item_horizontal_spacer"
+                android:layout_weight="1.75"
+                android:text="@string/channel_rating_heading_number"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.75"
+                android:text="@string/channel_rating_heading_count"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/channelRatingListDetail"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
     </LinearLayout>
 </ScrollView>

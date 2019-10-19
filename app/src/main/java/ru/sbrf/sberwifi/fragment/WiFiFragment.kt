@@ -142,7 +142,7 @@ class WiFiFragment : Fragment() {
     }
 
     @Serializable
-    private inner class WifiSave(val listWifi: List<WiFiDetail>)
+    private class WifiSave(val listWifi: List<WiFiDetail>)
 
     companion object {
         /**

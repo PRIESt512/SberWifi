@@ -8,18 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.google.gson.Gson
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.ResultWiFi
-import ru.sbrf.sberwifi.livemodel.DetectorViewModel
 import ru.sbrf.sberwifi.wifi.model.WiFiData
 
 // the fragment initialization parameters
@@ -54,28 +46,22 @@ class ReportFragment : Fragment() {
         val gson = Gson()
         val client = OkHttpClient()
 
-        val viewModel = ViewModelProviders.of(this).get(DetectorViewModel::class.java)
+        /* sendButton.setOnClickListener {
+             when {
+                 list4Report != null -> {
+                     //val report = gson.toJson(list4Report)
+                     val json = Json(JsonConfiguration.Stable)
+                     val report = json.stringify(WiFiData.serializer(), list4Report)
+                     val body = report.toRequestBody("application/json; charset=utf-8".toMediaType())
+                     val request = Request.Builder()
+                             .url("http")
+                             .post(body)
+                             .build()
 
-        viewModel.resultScanLiveData.observe(this, Observer {
-            list4Report = it
-        })
-
-        sendButton.setOnClickListener {
-            when {
-                list4Report != null -> {
-                    //val report = gson.toJson(list4Report)
-                    val json = Json(JsonConfiguration.Stable)
-                    val report = json.stringify(WiFiData.serializer(), list4Report)
-                    val body = report.toRequestBody("application/json; charset=utf-8".toMediaType())
-                    val request = Request.Builder()
-                            .url("http")
-                            .post(body)
-                            .build()
-
-                    client.newCall(request).execute().use { response -> response.body!!.string() }
-                }
-            }
-        }
+                     client.newCall(request).execute().use { response -> response.body!!.string() }
+                 }
+             }
+         }*/
         return viewFragment
     }
 

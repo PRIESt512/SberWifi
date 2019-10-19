@@ -50,7 +50,7 @@ class WiFiData(private val wiFiDetails: List<WiFiDetail>, val wiFiConnection: Wi
         return results
     }
 
-    private fun getWiFiDetails(predicate: Predicate<WiFiDetail>): List<WiFiDetail> {
+    fun getWiFiDetails(predicate: Predicate<WiFiDetail>): List<WiFiDetail> {
         val selected = CollectionUtils.select(wiFiDetails, predicate)
         val collected = CollectionUtils.collect(selected, Transform())
         return ArrayList(collected)

@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.sbrf.sberwifi.MainContext
 import ru.sbrf.sberwifi.wifi.model.WiFiData
 
 /**
@@ -25,6 +26,7 @@ public class DetectorViewModel(application: Application) : AndroidViewModel(appl
     init {
         resultScanObserver = Observer {
             resultScanLiveData.value = it
+            MainContext.INSTANCE.wiFiData = it
         }
 
         scanMediatorLiveData.addSource(wifiScan) {

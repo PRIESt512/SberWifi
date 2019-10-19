@@ -3,6 +3,7 @@ package ru.sbrf.sberwifi
 import android.view.LayoutInflater
 import ru.sbrf.sberwifi.vendor.model.VendorService
 import ru.sbrf.sberwifi.vendor.model.VendorServiceFactory
+import ru.sbrf.sberwifi.wifi.model.WiFiData
 
 enum class MainContext {
     INSTANCE;
@@ -10,6 +11,9 @@ enum class MainContext {
     private lateinit var mainActivity: MainActivity
 
     public lateinit var vendorService: VendorService
+
+    @Volatile
+    public lateinit var wiFiData: WiFiData
 
     fun initialize(mainActivity: MainActivity) {
         //val applicationContext = mainActivity.applicationContext
