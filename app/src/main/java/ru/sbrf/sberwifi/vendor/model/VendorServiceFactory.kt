@@ -8,7 +8,6 @@ class VendorServiceFactory private constructor() {
     }
 
     companion object {
-
         fun makeVendorService(resources: Resources): VendorService {
             return VendorDB(resources)
         }

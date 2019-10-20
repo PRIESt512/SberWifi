@@ -10,14 +10,12 @@ enum class MainContext {
 
     private lateinit var mainActivity: MainActivity
 
-    public lateinit var vendorService: VendorService
+    lateinit var vendorService: VendorService
 
     @Volatile
-    public lateinit var wiFiData: WiFiData
+    lateinit var wiFiData: WiFiData
 
     fun initialize(mainActivity: MainActivity) {
-        //val applicationContext = mainActivity.applicationContext
-        // val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         this.mainActivity = mainActivity
         this.vendorService = VendorServiceFactory.makeVendorService(mainActivity.resources)
     }

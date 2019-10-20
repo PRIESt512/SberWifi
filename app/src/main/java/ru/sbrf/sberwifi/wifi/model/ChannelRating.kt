@@ -128,8 +128,8 @@ class ChannelRating {
     }
 
     companion object {
-        internal val LEVEL_RANGE_MIN = -5
-        private val LEVEL_RANGE_MAX = 5
-        private val BSSID_LENGTH = 17
+        private const val LEVEL_RANGE_MIN = -5
+        private const val LEVEL_RANGE_MAX = 5
+        private const val BSSID_LENGTH = 17
     }
 }

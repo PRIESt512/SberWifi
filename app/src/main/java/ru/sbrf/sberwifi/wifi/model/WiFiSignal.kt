@@ -13,21 +13,21 @@ import java.util.*
 
 @Serializable
 class WiFiSignal(val primaryFrequency: Int, val centerFrequency: Int, val wiFiWidth: WiFiWidth, val level: Int, val is80211mc: Boolean) {
-    public val wiFiBand: WiFiBand = EnumUtils.find(WiFiBand::class.java, FrequencyPredicate(primaryFrequency), WiFiBand.GHZ2)
+    val wiFiBand: WiFiBand = EnumUtils.find(WiFiBand::class.java, FrequencyPredicate(primaryFrequency), WiFiBand.GHZ2)
 
-    public val frequencyStart: Int = centerFrequency - wiFiWidth.frequencyWidthHalf
+    val frequencyStart: Int = centerFrequency - wiFiWidth.frequencyWidthHalf
 
-    public val frequencyEnd: Int = centerFrequency + wiFiWidth.frequencyWidthHalf
+    val frequencyEnd: Int = centerFrequency + wiFiWidth.frequencyWidthHalf
 
     val primaryWiFiChannel: WiFiChannel
 
     private val centerWiFiChannel: WiFiChannel
 
-    public val strength: Strength
+    val strength: Strength
 
-    public val distance: String
+    val distance: String
 
-    public val channelDisplay: String
+    val channelDisplay: String
 
     init {
         this.primaryWiFiChannel = wiFiBand.wiFiChannels.getWiFiChannelByFrequency(primaryFrequency)
@@ -77,7 +77,6 @@ class WiFiSignal(val primaryFrequency: Int, val centerFrequency: Int, val wiFiWi
 
     companion object {
         val EMPTY = WiFiSignal(0, 0, WiFiWidth.MHZ_20, 0, false)
-        val FREQUENCY_UNITS = "MHz"
+        const val FREQUENCY_UNITS = "MHz"
     }
-
 }

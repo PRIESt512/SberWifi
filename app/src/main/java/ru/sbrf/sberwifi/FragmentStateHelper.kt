@@ -25,7 +25,7 @@ class FragmentStateHelper(private val fragmentManager: FragmentManager) {
     companion object {
 
         @Volatile
-        public var INSTANCE: FragmentStateHelper? = null
+        var INSTANCE: FragmentStateHelper? = null
 
         fun getInstance(fragmentManager: FragmentManager) {
             INSTANCE ?: synchronized(this) {
