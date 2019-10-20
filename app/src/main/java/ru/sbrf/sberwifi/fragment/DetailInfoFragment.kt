@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
+import ru.sbrf.sberwifi.FragmentEnum
 import ru.sbrf.sberwifi.MainContext
 import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.wifi.model.ChannelDetailAdapter
@@ -40,7 +41,7 @@ class DetailInfoFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_detail_info, container, false)
+        val view = inflater.inflate(FragmentEnum.DetailInfoFragment.idFragment, container, false)
 
         view.findViewById<TextView>(R.id.ssid).text = wifiDetail.SSID
         view.findViewById<TextView>(R.id.mac).text = wifiDetail.bssid

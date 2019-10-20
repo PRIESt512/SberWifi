@@ -18,9 +18,9 @@ class MainActivity : AppCompatActivity(),
 
     private var wiFiDetail: WiFiDetail? = null
 
-    private var currentSelectItemId = R.id.navigation_wifi
+    private lateinit var currentFragment: Fragment
 
-    private var currentFragment: Fragment? = null
+    private lateinit var currentFragmentEnum: FragmentEnum
 
     override fun onFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity(),
         //по умолчанию отображаем фрагмент WiFi
         val transaction = supportFragmentManager.beginTransaction()
         currentFragment = WiFiFragment.newInstance()
+        currentFragmentEnum = FragmentEnum.WiFiFragment
         transaction.replace(R.id.frame_layout, currentFragment!!)
         transaction.commit()
     }
@@ -58,19 +59,19 @@ class MainActivity : AppCompatActivity(),
         findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnNavigationItemSelectedListener {
 
             val selectedFragment: Fragment? = when (it.itemId) {
-                R.id.navigation_wifi -> {
+                FragmentEnum.WiFiFragment.idFragment -> {
                     val newFragment = WiFiFragment.newInstance()
-                    replaceFragment(newFragment, it.itemId)
+                    replaceFragment(newFragment, FragmentEnum.WiFiFragment)
                     newFragment
                 }
-                R.id.navigation_report -> {
+                FragmentEnum.ReportFragment.idFragment -> {
                     val newFragment = ReportFragment.newInstance()
-                    replaceFragment(newFragment, it.itemId)
+                    replaceFragment(newFragment, FragmentEnum.ReportFragment)
                     newFragment
                 }
-                R.id.navigation_iperf -> {
+                FragmentEnum.IperfFragment.idFragment -> {
                     val newFragment = IperfFragment.newInstance()
-                    replaceFragment(newFragment, it.itemId)
+                    replaceFragment(newFragment, FragmentEnum.IperfFragment)
                     newFragment
                 }
                 else -> throw UnsupportedOperationException("Невозможно выбрать фрагмент для отображения")
@@ -82,12 +83,11 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    private fun replaceFragment(newFragment: Fragment, newFragmentId: Int) {
-        if (currentFragment != null)
-            FragmentStateHelper.INSTANCE?.saveState(currentFragment!!, currentSelectItemId.toString())
-        fragmentStateHelper.restoreState(newFragment, newFragmentId.toString())
+    private fun replaceFragment(newFragment: Fragment, newFragmentEnum: FragmentEnum) {
+        FragmentStateHelper.INSTANCE?.saveState(currentFragmentEnum, currentFragment)
+        fragmentStateHelper.restoreState(newFragmentEnum, newFragment)
         onActivityAttachFragment(newFragment)
-        currentSelectItemId = newFragmentId
+        currentFragmentEnum = newFragmentEnum
         currentFragment = newFragment
     }
 

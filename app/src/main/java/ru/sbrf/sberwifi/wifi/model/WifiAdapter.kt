@@ -13,6 +13,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.sbrf.sberwifi.MainContext.INSTANCE
 import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.livemodel.DetectorViewModel
@@ -23,7 +27,10 @@ class WifiAdapter(fragment: Fragment, context: Context, val wifiDetails: List<Wi
         ArrayAdapter<WiFiDetail>(context, resource, wifiDetails) {
 
     private val channelRating: ChannelRating = ChannelRating()
+
     private val viewModel = ViewModelProviders.of(fragment).get(DetectorViewModel::class.java)
+
+    private val mainScope = MainScope()
 
     init {
         channelRating.setWiFiDetails(this.wifiDetails)
@@ -67,16 +74,25 @@ class WifiAdapter(fragment: Fragment, context: Context, val wifiDetails: List<Wi
         viewHolder.channel_frequency_range.text = String.format(Locale.ENGLISH, "%d - %d", wifiDetail.wiFiSignal.frequencyStart, wifiDetail.wiFiSignal.frequencyEnd)
         viewHolder.width.text = String.format(Locale.ENGLISH, "(%d%s)", wifiDetail.wiFiSignal.wiFiWidth.frequencyWidth, WiFiSignal.FREQUENCY_UNITS)
 
-        val strength = Strength.reverse(channelRating.getStrength(wifiDetail.wiFiSignal.primaryWiFiChannel))
-        val size = Strength.values().size
-        viewHolder.channel_rating.max = size
-        viewHolder.channel_rating.numStars = size
-        viewHolder.channel_rating.isIndicator
-        viewHolder.channel_rating.rating = (strength.ordinal + 1).toFloat()
-        val color = ContextCompat.getColor(context, strength.colorResource())
-        viewHolder.channel_rating.progressTintList = ColorStateList.valueOf(color)
+        mainScope.launch {
+            initChannelRating(viewHolder, wifiDetail)
+        }
 
         return view!!
+    }
+
+    private suspend fun initChannelRating(viewHolder: ViewHolder, wifiDetail: WiFiDetail) = withContext(Dispatchers.Default) {
+        val strength = Strength.reverse(channelRating.getStrength(wifiDetail.wiFiSignal.primaryWiFiChannel))
+        val size = Strength.values().size
+        val color = ContextCompat.getColor(context, strength.colorResource())
+
+        mainScope.launch {
+            viewHolder.channel_rating.max = size
+            viewHolder.channel_rating.numStars = size
+            viewHolder.channel_rating.isIndicator
+            viewHolder.channel_rating.rating = (strength.getNumberOfStrength()).toFloat()
+            viewHolder.channel_rating.progressTintList = ColorStateList.valueOf(color)
+        }
     }
 
     private inner class ViewHolder(val levelImage: ImageView, val level: TextView, val capabilities: TextView,

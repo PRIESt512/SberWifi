@@ -2,22 +2,23 @@ package ru.sbrf.sberwifi
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import java.util.*
 
 class FragmentStateHelper(private val fragmentManager: FragmentManager) {
 
-    private val fragmentState = mutableMapOf<String, Fragment.SavedState?>()
+    private val fragmentState = EnumMap<FragmentEnum, Fragment.SavedState?>(FragmentEnum::class.java)
 
-    fun restoreState(fragment: Fragment, idFragment: String) {
-        fragmentState[idFragment]?.let { savedState ->
+    fun restoreState(fragmentEnum: FragmentEnum, fragment: Fragment) {
+        fragmentState[fragmentEnum]?.let { savedState ->
             if (!fragment.isAdded) {
                 fragment.setInitialSavedState(savedState)
             }
         }
     }
 
-    fun saveState(fragment: Fragment, idFragment: String) {
+    fun saveState(fragmentEnum: FragmentEnum, fragment: Fragment) {
         if (fragment.isAdded) {
-            fragmentState[idFragment] = fragmentManager.saveFragmentInstanceState(fragment)
+            fragmentState[fragmentEnum] = fragmentManager.saveFragmentInstanceState(fragment)
         }
     }
 

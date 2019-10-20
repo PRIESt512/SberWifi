@@ -10,6 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.sbrf.sberwifi.MainContext
 import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.databinding.ChannelRatingDetailsBinding
@@ -20,7 +24,6 @@ import ru.sbrf.sberwifi.wifi.band.WiFiChannel
 
 class ChannelDetailAdapter(fragment: Fragment, private val bestChannels: TextView, val context: Context, isGHZ5: Boolean) : RecyclerView.Adapter<ChannelRatingHolder>() {
 
-    private val countryCode = "RU"
 
     private val channelRating: ChannelRating = ChannelRating()
 
@@ -32,25 +35,30 @@ class ChannelDetailAdapter(fragment: Fragment, private val bestChannels: TextVie
 
     private val wiFiChannels = wiFiBand.wiFiChannels.getAvailableChannels(countryCode)
 
+    private val mainScope = MainScope()
+
     init {
         viewModel.resultScanLiveData.observe(fragment, Observer {
-            updateViewFragment(it)
+            mainScope.launch {
+                updateViewFragment(it)
+            }
         })
-
-        updateViewFragment(MainContext.INSTANCE.wiFiData)
+        mainScope.launch {
+            updateViewFragment(MainContext.INSTANCE.wiFiData)
+        }
     }
 
-    private fun updateViewFragment(wiFiData: WiFiData) {
+    private suspend fun updateViewFragment(wiFiData: WiFiData) = withContext(Dispatchers.Default) {
         val wiFiDetails = wiFiData.getWiFiDetails(WiFiBandPredicate(wiFiBand))
         channelRating.setWiFiDetails(wiFiDetails)
         bestChannels(wiFiBand, wiFiChannels)
 
         setData(wiFiChannels.map { item ->
             val strength = Strength.reverse(channelRating.getStrength(item))
-            ChannelRatingModel((strength.ordinal + 1).toFloat(), item.channel.toString(), channelRating.getCount(item).toString())
+            ChannelRatingModel((strength.getNumberOfStrength()).toFloat(), item.channel.toString(), channelRating.getCount(item).toString())
         }.toList())
 
-        this.notifyDataSetChanged()
+        mainScope.launch { this@ChannelDetailAdapter.notifyDataSetChanged() }
     }
 
     public fun setData(data: List<ChannelRatingModel>) {
@@ -86,8 +94,10 @@ class ChannelDetailAdapter(fragment: Fragment, private val bestChannels: TextVie
             channelCount++
         }
         if (result.isNotEmpty()) {
-            bestChannels.text = result.toString()
-            bestChannels.setTextColor(ContextCompat.getColor(context, R.color.success))
+            mainScope.launch {
+                bestChannels.text = result.toString()
+                bestChannels.setTextColor(ContextCompat.getColor(context, R.color.success))
+            }
         } else {
             val resources = context.resources
             val message = StringBuilder(resources.getText(R.string.channel_rating_best_none))
@@ -96,12 +106,16 @@ class ChannelDetailAdapter(fragment: Fragment, private val bestChannels: TextVie
                 message.append(" ")
                 message.append(context.resources.getString(WiFiBand.GHZ5.textResource))
             }
-            bestChannels.text = message
-            bestChannels.setTextColor(ContextCompat.getColor(context, R.color.error))
+            mainScope.launch {
+                bestChannels.text = message
+                bestChannels.setTextColor(ContextCompat.getColor(context, R.color.error))
+            }
         }
     }
 
     companion object {
         private const val MAX_CHANNELS_TO_DISPLAY = 10
+        private const val countryCode = "RU"
+
     }
 }

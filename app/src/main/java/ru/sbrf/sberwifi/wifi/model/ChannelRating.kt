@@ -24,7 +24,7 @@ class ChannelRating {
         var strength = Strength.ZERO
         for (wiFiDetail in collectOverlapping(wiFiChannel)) {
             if (!wiFiDetail.wiFiAdditional.wiFiConnection.isConnected) {
-                strength = Strength.values()[max(strength.ordinal, wiFiDetail.wiFiSignal.strength.ordinal)]
+                strength = Strength.values()[max(strength.getNumberOfStrength() - 1, wiFiDetail.wiFiSignal.strength.getNumberOfStrength() - 1)]
             }
         }
         return strength
