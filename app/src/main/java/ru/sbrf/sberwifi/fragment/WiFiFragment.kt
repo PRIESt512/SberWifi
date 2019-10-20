@@ -122,6 +122,7 @@ class WiFiFragment : Fragment() {
             mainConnect?.findViewById<TextView>(R.id.name)?.text = wiFiConnection.title
             mainConnect?.findViewById<TextView>(R.id.ip_address)?.text = wiFiConnection.ipAddress
             mainConnect?.findViewById<TextView>(R.id.link_speed_main_connect)?.text = wiFiConnection.linkSpeed
+            mainConnect?.findViewById<TextView>(R.id.mac_device)?.text = wiFiConnection.macAddressDevice
             list?.addHeaderView(mainConnect)
         } else {
             list?.removeHeaderView(mainConnect)

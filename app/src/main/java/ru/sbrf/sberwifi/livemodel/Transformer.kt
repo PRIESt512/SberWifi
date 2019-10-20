@@ -19,7 +19,8 @@ internal class Transformer {
                 WiFiUtils.convertSSID(wifiInfo.ssid),
                 wifiInfo.bssid,
                 WiFiUtils.convertIpAddress(wifiInfo.ipAddress),
-                transformLinkSpeedUnits(wifiInfo.linkSpeed))
+                transformLinkSpeedUnits(wifiInfo.linkSpeed),
+                wifiInfo.macAddress)
     }
 
     private fun transformLinkSpeedUnits(value: Int): String {

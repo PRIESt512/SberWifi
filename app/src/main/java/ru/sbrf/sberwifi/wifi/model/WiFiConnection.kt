@@ -5,13 +5,23 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.builder.EqualsBuilder
 import org.apache.commons.lang3.builder.HashCodeBuilder
 import org.apache.commons.lang3.builder.ToStringBuilder
+import ru.sbrf.sberwifi.util.UtilsNet
 
 @Serializable
 class WiFiConnection(val ssid: String,
                      val bssid: String,
                      val ipAddress: String,
-                     val linkSpeed: String) {
+                     val linkSpeed: String,
+                     var macAddressDevice: String) {
 
+    init {
+        if (macAddressDevice == DEFAULT_MAC_ADDRESS && ssid != StringUtils.EMPTY) {
+            val macAddress = UtilsNet.getMACAddress(UtilsNet.INTERFACE_WLAN)
+            if (macAddress.isNotEmpty()) {
+                this.macAddressDevice = macAddress
+            }
+        }
+    }
 
     val title by lazy(LazyThreadSafetyMode.NONE) {
         String.format("%s (%s)", ssid, bssid)
@@ -30,6 +40,7 @@ class WiFiConnection(val ssid: String,
         return EqualsBuilder()
                 .append(ssid, that!!.ssid)
                 .append(bssid, that.bssid)
+                .append(macAddressDevice, that.macAddressDevice)
                 .isEquals
     }
 
@@ -37,6 +48,7 @@ class WiFiConnection(val ssid: String,
         return HashCodeBuilder(17, 37)
                 .append(ssid)
                 .append(bssid)
+                .append(macAddressDevice)
                 .toHashCode()
     }
 
@@ -46,7 +58,10 @@ class WiFiConnection(val ssid: String,
 
     companion object {
         public const val LINK_SPEED_INVALID = "LINK_SPEED_UNKNOWN"
-        val EMPTY = WiFiConnection(StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, LINK_SPEED_INVALID)
+
+        public const val DEFAULT_MAC_ADDRESS = "02:00:00:00:00:00"
+
+        val EMPTY = WiFiConnection(StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, LINK_SPEED_INVALID, DEFAULT_MAC_ADDRESS)
     }
 }
 

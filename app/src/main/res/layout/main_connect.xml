@@ -8,7 +8,7 @@
         android:id="@+id/connection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/green"
+        android:background="@color/colorPrimary"
         android:orientation="vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
@@ -34,6 +34,17 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/list_view_item_horizontal_tab"
+                android:layout_marginEnd="@dimen/list_view_item_horizontal_spacer"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:text="@string/ip" />
+
+            <TextView
                 android:id="@+id/ip_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,17 +55,46 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/list_view_item_horizontal_tab"
+                android:layout_marginEnd="@dimen/list_view_item_horizontal_spacer"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:text="@string/speed" />
 
             <TextView
                 android:id="@+id/link_speed_main_connect"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="@dimen/list_view_item_horizontal_spacer"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/list_view_item_horizontal_tab"
+                android:layout_marginEnd="@dimen/list_view_item_horizontal_spacer"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:text="@string/macdevice" />
+
+            <TextView
+                android:id="@+id/mac_device"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/list_view_item_horizontal_spacer"
                 android:textColor="@color/white"
                 android:textAlignment="center"
                 android:textStyle="bold" />
+
         </LinearLayout>
     </LinearLayout>
 
