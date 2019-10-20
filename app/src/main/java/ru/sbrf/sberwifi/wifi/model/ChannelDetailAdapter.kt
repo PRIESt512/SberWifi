@@ -24,7 +24,6 @@ import ru.sbrf.sberwifi.wifi.band.WiFiChannel
 
 class ChannelDetailAdapter(fragment: Fragment, private val bestChannels: TextView, val context: Context, isGHZ5: Boolean) : RecyclerView.Adapter<ChannelRatingHolder>() {
 
-
     private val channelRating: ChannelRating = ChannelRating()
 
     private val viewModel = ViewModelProviders.of(fragment).get(DetectorViewModel::class.java)

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="list_view_item_horizontal_spacer">4dp</dimen>
+    <dimen name="list_view_item_horizontal_tab">24dp</dimen>
 </resources>

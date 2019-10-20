@@ -77,13 +77,8 @@ class WiFiData(private val wiFiDetails: List<WiFiDetail>, val wiFiConnection: Wi
     }
 
     private inner class Transform : Transformer<WiFiDetail, WiFiDetail> {
-        private val connection: WiFiDetail
-        private val vendorService: VendorService
-
-        init {
-            this.connection = getConnection()
-            this.vendorService = MainContext.INSTANCE.vendorService
-        }
+        private val connection: WiFiDetail = getConnection()
+        private val vendorService: VendorService = MainContext.INSTANCE.vendorService
 
         override fun transform(input: WiFiDetail): WiFiDetail {
             if (input == connection) {

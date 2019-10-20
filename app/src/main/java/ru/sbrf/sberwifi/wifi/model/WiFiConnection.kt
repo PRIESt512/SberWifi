@@ -10,9 +10,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 class WiFiConnection(val ssid: String,
                      val bssid: String,
                      val ipAddress: String,
-                     val linkSpeed: String,
-                     val mTxLinkSpeed: String = "LINK_SPEED_UNKNOWN",
-                     val mRxLinkSpeed: String = "LINK_SPEED_UNKNOWN") {
+                     val linkSpeed: String) {
+
+
+    val title by lazy(LazyThreadSafetyMode.NONE) {
+        String.format("%s (%s)", ssid, bssid)
+    }
 
     val isConnected: Boolean
         get() = EMPTY != this

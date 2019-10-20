@@ -19,6 +19,6 @@
         android:layoutAnimation="@anim/layout_animation_fall_down"
         android:divider="@drawable/separator_line"
         android:dividerHeight="10.0dp"
-        android:layout_marginBottom="46dp" />
+        android:layout_marginBottom="46dp"></ru.sbrf.sberwifi.view.ParallaxScrollListView>
 
 </FrameLayout>

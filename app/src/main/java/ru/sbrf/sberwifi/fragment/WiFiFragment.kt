@@ -10,13 +10,14 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import android.widget.AbsListView
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.view.ParallaxScrollListView
+import ru.sbrf.sberwifi.wifi.model.WiFiConnection
 import ru.sbrf.sberwifi.wifi.model.WiFiData
 import ru.sbrf.sberwifi.wifi.model.WiFiDetail
 import ru.sbrf.sberwifi.wifi.model.WifiAdapter
@@ -43,6 +44,8 @@ class WiFiFragment : Fragment() {
 
     private val json = Json(JsonConfiguration.Stable)
 
+    private var mainConnect: View? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -66,8 +69,8 @@ class WiFiFragment : Fragment() {
 
         val savedListWiFi = savedInstanceState?.getString(VIEW_MODEL_PARAM)
         wifiAdapter = if (savedListWiFi != null) {
-            val wifi = json.parse(WifiSave.serializer(), savedListWiFi)
-            WifiAdapter(this, context!!, wifi.listWifi)
+            val wifi = json.parse(WiFiData.serializer(), savedListWiFi)
+            WifiAdapter(this, context!!, wifi)
         } else {
             WifiAdapter(this, context!!)
         }
@@ -101,7 +104,28 @@ class WiFiFragment : Fragment() {
                 }
             }
         })
+
+        val wiFiConnection =
+                if (wifiAdapter?.wiFiData?.wiFiConnection != null)
+                    wifiAdapter?.wiFiData?.wiFiConnection!!
+                else WiFiConnection.EMPTY
+
+        setMainConnect(wiFiConnection)
+
         return viewFragment
+    }
+
+    public fun setMainConnect(wiFiConnection: WiFiConnection = WiFiConnection.EMPTY) {
+        if (wiFiConnection != WiFiConnection.EMPTY) {
+            list?.removeHeaderView(mainConnect)
+            mainConnect = LayoutInflater.from(this.context).inflate(R.layout.main_connect, null)
+            mainConnect?.findViewById<TextView>(R.id.name)?.text = wiFiConnection.title
+            mainConnect?.findViewById<TextView>(R.id.ip_address)?.text = wiFiConnection.ipAddress
+            mainConnect?.findViewById<TextView>(R.id.link_speed_main_connect)?.text = wiFiConnection.linkSpeed
+            list?.addHeaderView(mainConnect)
+        } else {
+            list?.removeHeaderView(mainConnect)
+        }
     }
 
     fun setOnWiFiListener(callback: OnWifiInteractionListener) {
@@ -126,9 +150,9 @@ class WiFiFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if (wifiAdapter?.wifiDetails?.isEmpty()!!)
+        if (wifiAdapter?.wiFiData == WiFiData.EMPTY)
             return
-        val report = json.stringify(WifiSave.serializer(), WifiSave(wifiAdapter?.wifiDetails!!))
+        val report = json.stringify(WiFiData.serializer(), wifiAdapter?.wiFiData!!)
         outState.putString(VIEW_MODEL_PARAM, report)
     }
 
@@ -140,9 +164,6 @@ class WiFiFragment : Fragment() {
     interface OnWifiInteractionListener {
         fun onFragmentInteraction(wiFiDetail: WiFiDetail)
     }
-
-    @Serializable
-    private class WifiSave(val listWifi: List<WiFiDetail>)
 
     companion object {
         /**

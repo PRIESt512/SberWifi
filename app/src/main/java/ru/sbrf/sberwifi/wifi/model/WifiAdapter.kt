@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.coroutines.Dispatchers
@@ -19,12 +18,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.sbrf.sberwifi.MainContext.INSTANCE
 import ru.sbrf.sberwifi.R
+import ru.sbrf.sberwifi.fragment.WiFiFragment
 import ru.sbrf.sberwifi.livemodel.DetectorViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class WifiAdapter(fragment: Fragment, context: Context, val wifiDetails: List<WiFiDetail> = ArrayList(15), resource: Int = R.layout.wifi_list_menu) :
-        ArrayAdapter<WiFiDetail>(context, resource, wifiDetails) {
+class WifiAdapter(fragment: WiFiFragment, context: Context,
+                  @Volatile var wiFiData: WiFiData = WiFiData.EMPTY,
+                  resource: Int = R.layout.wifi_list_menu) :
+        ArrayAdapter<WiFiDetail>(context, resource, ArrayList(wiFiData.getWiFiDetails())) {
 
     private val channelRating: ChannelRating = ChannelRating()
 
@@ -33,20 +35,22 @@ class WifiAdapter(fragment: Fragment, context: Context, val wifiDetails: List<Wi
     private val mainScope = MainScope()
 
     init {
-        channelRating.setWiFiDetails(this.wifiDetails)
+        channelRating.setWiFiDetails(this.wiFiData.getWiFiDetails())
 
         viewModel.resultScanLiveData.observe(fragment, Observer {
+            this.wiFiData = it
             this.clear()
-            this.addAll(it.getWiFiDetails())
+            this.addAll(this.wiFiData.getWiFiDetails())
             this.notifyDataSetChanged()
-            channelRating.setWiFiDetails(it.getWiFiDetails())
+            channelRating.setWiFiDetails(this.wiFiData.getWiFiDetails())
+            fragment.setMainConnect(this.wiFiData.wiFiConnection)
         })
     }
 
     @SuppressLint("InflateParams")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
-        var viewHolder: ViewHolder? = null
+        val viewHolder: ViewHolder?
         var view = convertView
         if (view == null) {
             view = INSTANCE.getLayoutInflater().inflate(R.layout.wifi_list_menu, parent, false)
