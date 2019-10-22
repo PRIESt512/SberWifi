@@ -79,7 +79,8 @@ class WiFiFragment : Fragment() {
 
         list?.setOnItemClickListener { _, _, position, _ ->
             val transaction = myContext?.supportFragmentManager?.beginTransaction()!!
-            val fragment = DetailInfoFragment.newInstance(json.stringify(WiFiDetail.serializer(), wifiAdapter?.getItem(position - 1)!!))
+            val item = if (list?.headerViewsCount!! > 0) wifiAdapter?.getItem(position - 2)!! else wifiAdapter?.getItem(position - 1)!!
+            val fragment = DetailInfoFragment.newInstance(json.stringify(WiFiDetail.serializer(), item))
             transaction.replace(R.id.frame_layout, fragment)
             transaction.addToBackStack(null)
             transaction.commit()

@@ -85,6 +85,10 @@ class WifiAdapter(fragment: WiFiFragment, context: Context,
         return view!!
     }
 
+    override fun getItem(position: Int): WiFiDetail? {
+        return super.getItem(position)
+    }
+
     private suspend fun initChannelRating(viewHolder: ViewHolder, wifiDetail: WiFiDetail) = withContext(Dispatchers.Default) {
         val strength = Strength.reverse(channelRating.getStrength(wifiDetail.wiFiSignal.primaryWiFiChannel))
         val size = Strength.values().size

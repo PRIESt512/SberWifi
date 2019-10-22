@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_detail_info.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import ru.sbrf.sberwifi.FragmentEnum
@@ -43,27 +43,6 @@ class DetailInfoFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(FragmentEnum.DetailInfoFragment.idFragment, container, false)
 
-        view.findViewById<TextView>(R.id.ssid).text = wifiDetail.SSID
-        view.findViewById<TextView>(R.id.mac).text = wifiDetail.bssid
-
-        view.findViewById<TextView>(R.id.central_frequency).text =
-                String.format(Locale.ENGLISH, "%d Мгц", wifiDetail.wiFiSignal.primaryFrequency)
-
-        view.findViewById<TextView>(R.id.channel_frequency_range).text =
-                String.format(Locale.ENGLISH, "%d Мгц - %d Мгц", wifiDetail.wiFiSignal.frequencyStart, wifiDetail.wiFiSignal.frequencyEnd)
-
-        view.findViewById<TextView>(R.id.channel).text = wifiDetail.wiFiSignal.channelDisplay
-
-        view.findViewById<TextView>(R.id.bandwidth).text =
-                String.format(Locale.ENGLISH, "%d%s", wifiDetail.wiFiSignal.wiFiWidth.frequencyWidth, WiFiSignal.FREQUENCY_UNITS)
-
-        view.findViewById<TextView>(R.id.type_wifi).text =
-                if (wifiDetail.wiFiSignal.wiFiBand.isGHZ5) "5 ГГц" else "2.4 ГГц"
-
-        view.findViewById<TextView>(R.id.distance_wifi).text = wifiDetail.wiFiSignal.distance
-        view.findViewById<TextView>(R.id.vendor_wifi).text =
-                MainContext.INSTANCE.vendorService.findVendorName(wifiDetail.bssid)
-
         val viewManager = LinearLayoutManager(this.context)
         val adapterView = ChannelDetailAdapter(this, view.findViewById(R.id.bestChannel), this.context!!, wifiDetail.wiFiSignal.wiFiBand.isGHZ5)
         view.findViewById<RecyclerView>(R.id.channelRatingListDetail).apply {
@@ -74,8 +53,28 @@ class DetailInfoFragment : Fragment() {
         return view
     }
 
-    override fun onDetach() {
-        super.onDetach()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        ssid.text = wifiDetail.SSID
+        mac.text = wifiDetail.bssid
+
+        central_frequency.text = String.format(Locale.ENGLISH, "%d Мгц", wifiDetail.wiFiSignal.primaryFrequency)
+
+        channel_frequency_range.text = String.format(Locale.ENGLISH, "%d Мгц - %d Мгц",
+                wifiDetail.wiFiSignal.frequencyStart, wifiDetail.wiFiSignal.frequencyEnd)
+
+        channel.text = wifiDetail.wiFiSignal.channelDisplay
+
+        bandwidth.text = String.format(Locale.ENGLISH, "%d%s",
+                wifiDetail.wiFiSignal.wiFiWidth.frequencyWidth, WiFiSignal.FREQUENCY_UNITS)
+
+        type_wifi.text = if (wifiDetail.wiFiSignal.wiFiBand.isGHZ5) "5 ГГц" else "2.4 ГГц"
+
+        distance_wifi.text = wifiDetail.wiFiSignal.distance
+
+        vendor_wifi.text = MainContext.INSTANCE.vendorService.findVendorName(wifiDetail.bssid)
+
     }
 
     companion object {

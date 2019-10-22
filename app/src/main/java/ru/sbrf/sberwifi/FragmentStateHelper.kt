@@ -28,8 +28,10 @@ class FragmentStateHelper(private val fragmentManager: FragmentManager) {
         var INSTANCE: FragmentStateHelper? = null
 
         fun getInstance(fragmentManager: FragmentManager) {
-            INSTANCE ?: synchronized(this) {
-                INSTANCE ?: FragmentStateHelper(fragmentManager).also { INSTANCE = it }
+            var result = INSTANCE
+            result ?: synchronized(this) {
+                result = INSTANCE
+                result ?: FragmentStateHelper(fragmentManager).also { INSTANCE = it }
             }
         }
     }
