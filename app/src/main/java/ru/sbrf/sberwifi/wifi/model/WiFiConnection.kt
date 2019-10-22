@@ -15,6 +15,7 @@ class WiFiConnection(val ssid: String,
                      var macAddressDevice: String) {
 
     init {
+        //используется только для основного соединения мобильного устройства
         if (macAddressDevice == DEFAULT_MAC_ADDRESS && ssid != StringUtils.EMPTY) {
             val macAddress = UtilsNet.getMACAddress(UtilsNet.INTERFACE_WLAN)
             if (macAddress.isNotEmpty()) {

@@ -16,11 +16,11 @@ import androidx.fragment.app.FragmentActivity
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import ru.sbrf.sberwifi.R
+import ru.sbrf.sberwifi.adapters.WifiAdapter
 import ru.sbrf.sberwifi.view.ParallaxScrollListView
 import ru.sbrf.sberwifi.wifi.model.WiFiConnection
 import ru.sbrf.sberwifi.wifi.model.WiFiData
 import ru.sbrf.sberwifi.wifi.model.WiFiDetail
-import ru.sbrf.sberwifi.wifi.model.WifiAdapter
 
 // the fragment initialization parameters
 private const val VIEW_MODEL_PARAM = "listWiFi"

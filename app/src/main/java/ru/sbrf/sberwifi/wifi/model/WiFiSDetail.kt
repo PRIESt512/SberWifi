@@ -9,11 +9,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 import java.util.*
 
 @Serializable
-class WiFiDetail @JvmOverloads constructor(val SSID: String = StringUtils.EMPTY,
-                                           val bssid: String,
-                                           val capabilities: String,
-                                           val wiFiSignal: WiFiSignal,
-                                           val wiFiAdditional: WiFiAdditional = WiFiAdditional.EMPTY) : Comparable<WiFiDetail>, java.io.Serializable {
+class WiFiDetail constructor(val SSID: String = StringUtils.EMPTY,
+                             val bssid: String,
+                             val capabilities: String,
+                             val wiFiSignal: WiFiSignal,
+                             val wiFiAdditional: WiFiAdditional = WiFiAdditional.EMPTY) : Comparable<WiFiDetail>, java.io.Serializable {
 
     private val children: MutableList<WiFiDetail>
 

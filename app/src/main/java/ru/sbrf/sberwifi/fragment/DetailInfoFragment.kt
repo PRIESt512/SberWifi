@@ -13,7 +13,7 @@ import kotlinx.serialization.json.JsonConfiguration
 import ru.sbrf.sberwifi.FragmentEnum
 import ru.sbrf.sberwifi.MainContext
 import ru.sbrf.sberwifi.R
-import ru.sbrf.sberwifi.wifi.model.ChannelDetailAdapter
+import ru.sbrf.sberwifi.adapters.ChannelDetailAdapter
 import ru.sbrf.sberwifi.wifi.model.WiFiDetail
 import ru.sbrf.sberwifi.wifi.model.WiFiSignal
 import java.util.*

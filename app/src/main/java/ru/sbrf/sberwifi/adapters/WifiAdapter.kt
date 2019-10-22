@@ -1,4 +1,4 @@
-package ru.sbrf.sberwifi.wifi.model
+package ru.sbrf.sberwifi.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -20,6 +20,7 @@ import ru.sbrf.sberwifi.MainContext.INSTANCE
 import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.fragment.WiFiFragment
 import ru.sbrf.sberwifi.livemodel.DetectorViewModel
+import ru.sbrf.sberwifi.wifi.model.*
 import java.util.*
 import kotlin.collections.ArrayList
 

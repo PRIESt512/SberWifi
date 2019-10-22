@@ -5,6 +5,7 @@ import android.net.wifi.WifiInfo
 import android.net.wifi.WifiInfo.LINK_SPEED_UNITS
 import android.net.wifi.WifiInfo.LINK_SPEED_UNKNOWN
 import org.apache.commons.collections4.CollectionUtils
+import ru.sbrf.sberwifi.util.BuildUtils
 import ru.sbrf.sberwifi.util.EnumUtils
 import ru.sbrf.sberwifi.wifi.band.WiFiWidth
 import ru.sbrf.sberwifi.wifi.model.*
@@ -71,10 +72,9 @@ internal class Transformer {
         return declaredField.get(scanResult) as Int
     }
 
-    /* private fun is80211mc(scanResult: ScanResult): Boolean {
-         //return BuildUtils.isMinVersionM() && scanResult.is80211mcResponder
-         return false
-     }*/
+    private fun is80211mc(scanResult: ScanResult): Boolean {
+        return BuildUtils.isMinVersionM && scanResult.is80211mcResponder
+    }
 
     internal enum class Fields {
         centerFreq0,
@@ -86,8 +86,7 @@ internal class Transformer {
         override fun transform(input: ScanResult): WiFiDetail {
             val wiFiWidth = getWiFiWidth(input)
             val centerFrequency = getCenterFrequency(input, wiFiWidth)
-//            val wiFiSignal = WiFiSignal(input.frequency, centerFrequency, wiFiWidth, input.level, is80211mc(input))
-            val wiFiSignal = WiFiSignal(input.frequency, centerFrequency, wiFiWidth, input.level, false)
+            val wiFiSignal = WiFiSignal(input.frequency, centerFrequency, wiFiWidth, input.level, is80211mc(input))
             return WiFiDetail(input.SSID, input.BSSID, input.capabilities, wiFiSignal)
         }
     }

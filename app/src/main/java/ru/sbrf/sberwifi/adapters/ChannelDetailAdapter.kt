@@ -1,4 +1,4 @@
-package ru.sbrf.sberwifi.wifi.model
+package ru.sbrf.sberwifi.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -21,6 +21,7 @@ import ru.sbrf.sberwifi.livemodel.DetectorViewModel
 import ru.sbrf.sberwifi.predicate.WiFiBandPredicate
 import ru.sbrf.sberwifi.wifi.band.WiFiBand
 import ru.sbrf.sberwifi.wifi.band.WiFiChannel
+import ru.sbrf.sberwifi.wifi.model.*
 
 class ChannelDetailAdapter(fragment: Fragment, private val bestChannels: TextView, val context: Context, isGHZ5: Boolean) : RecyclerView.Adapter<ChannelRatingHolder>() {
 
