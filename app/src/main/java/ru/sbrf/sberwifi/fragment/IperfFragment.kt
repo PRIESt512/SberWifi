@@ -23,6 +23,7 @@ import com.jayway.jsonpath.JsonPath
 import com.savvyapps.togglebuttonlayout.ToggleButtonLayout
 import kotlinx.coroutines.*
 import ru.sbrf.sberwifi.R
+import ru.sbrf.sberwifi.http.report.iperf.PostOfIperfUseCase
 import kotlin.coroutines.CoroutineContext
 
 class IperfFragment : Fragment(), CoroutineScope {
@@ -204,12 +205,19 @@ class IperfFragment : Fragment(), CoroutineScope {
 
     external fun start(host: String, port: Int, duration: Int, streams: Int)
 
+    /**
+     * Функция для вызова с нативной стороны JNI для корректной установки
+     * путе для кешированных файлов
+     */
     external fun initTempPath()
 
     public fun getTempPath(): String? {
         return this.context?.cacheDir?.absolutePath
     }
 
+    /**
+     * Функция для вызова с нативной стороны и передачи результатов тестирования в код Java
+     */
     public fun reportCallback(report: String?) {
         try {
             val secondsTest = JsonPath.read<Double>(report, "$.end.sum_received.seconds")
@@ -224,9 +232,29 @@ class IperfFragment : Fragment(), CoroutineScope {
                 iperfStop(currentView, View.VISIBLE)
                 resultTest.text = result
                 startStopButton?.setreverse_0()
+
+                if (report != null) {
+                    val result = sendReport(report)
+                    if (result.status == 200) {
+                        Toast.makeText(this@IperfFragment.context, "Отчет отправлен успешно", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@IperfFragment.context, "Отчет не отправлен; Статус ${result.status}", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         } catch (ex: Exception) {
             Log.e("Iperf", ex.toString())
+        }
+    }
+
+    private suspend fun sendReport(report: String): PostOfIperfUseCase.Result = withContext(Dispatchers.IO) {
+        val iperfCase = PostOfIperfUseCase()
+        val result = iperfCase.doWork(report)
+        if (result.status == 200)
+            return@withContext result
+        else {
+            Log.d("Report", "request status ${result.status}")
+            return@withContext result
         }
     }
 
@@ -238,7 +266,7 @@ class IperfFragment : Fragment(), CoroutineScope {
                     }
                 }
 
-        init {
+        init {//без этой либы iperf не заведется
             System.loadLibrary("iperf")
         }
     }

@@ -8,13 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
+import org.apache.commons.lang3.StringUtils
 import ru.sbrf.sberwifi.MainContext
 import ru.sbrf.sberwifi.R
-import ru.sbrf.sberwifi.http.PostOfReportUseCase
+import ru.sbrf.sberwifi.http.report.PostOfReportUseCase
 import ru.sbrf.sberwifi.wifi.model.WiFiData
 import kotlin.coroutines.CoroutineContext
 
@@ -57,27 +57,42 @@ class ReportFragment : Fragment(), CoroutineScope {
 
         val sendButton = viewFragment.findViewById<Button>(R.id.sendReport)
 
-        sendButton.setOnClickListener { sendReport() }
+        sendButton.setOnClickListener {
+            launch {
+                val report = sendReport()
+                if (report.status == 200) {
+                    Toast.makeText(this@ReportFragment.context, "Отчет отправлен успешно", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@ReportFragment.context, "Отчет не отправлен; Статус ${report.status}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
         return viewFragment
     }
 
-    private fun sendReport() {
+    private suspend fun sendReport(): PostOfReportUseCase.Result = withContext(Dispatchers.IO) {
         list4Report.getWiFiDetails().forEach {
             it.wiFiAdditional.vendorName = MainContext.INSTANCE.vendorService.findVendorName(it.bssid)
         }
 
-        val useCase = PostOfReportUseCase()
-        val json = Json(JsonConfiguration.Stable)
-        val report = json.stringify(WiFiData.serializer(), list4Report)
+        val reportCase = PostOfReportUseCase()
 
-        launch {
-            withContext(Dispatchers.IO) {
-                val result = useCase.doWork(report)
-                result.posts
-                Log.d("Report", result.posts!!)
+        try {
+            val result = reportCase.doWork(list4Report)
+
+            if (result.status == 200)
+                return@withContext result
+            else {
+                Log.d("Report", "request status ${result.status}")
+                return@withContext result
             }
+
+        } catch (ex: Exception) {
+            Log.e("Report", ex.toString())
+            return@withContext PostOfReportUseCase.Result(0, StringUtils.EMPTY)
         }
     }
+
 
     fun setOnReportListener(callback: OnReportInteractionListener) {
         this.callback = callback

@@ -24,9 +24,13 @@ class WiFiConnection(val ssid: String,
         }
     }
 
-    val title by lazy(LazyThreadSafetyMode.NONE) {
-        String.format("%s (%s)", ssid, bssid)
-    }
+    /* val title by lazy(LazyThreadSafetyMode.NONE) {
+         String.format("%s (%s)", ssid, bssid)
+     }*/
+
+    val title: String
+        get() = String.format("%s (%s)", ssid, bssid)
+
 
     val isConnected: Boolean
         get() = EMPTY != this

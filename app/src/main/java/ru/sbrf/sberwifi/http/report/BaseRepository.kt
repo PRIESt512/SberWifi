@@ -1,4 +1,4 @@
-package ru.sbrf.sberwifi.http
+package ru.sbrf.sberwifi.http.report
 
 abstract class BaseRepository<Params, Result> {
 

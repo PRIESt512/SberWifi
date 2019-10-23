@@ -1,22 +1,21 @@
-package ru.sbrf.sberwifi.http
+package ru.sbrf.sberwifi.http.report
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import ru.sbrf.sberwifi.wifi.model.WiFiData
 
-class ReportRepository : BaseRepository<String, ReportRepository.Result>() {
+class ReportRepository : BaseRepository<WiFiData, Response<String>>() {
 
-    override suspend fun doWork(params: String): Result {
+    override suspend fun doWork(params: WiFiData): Response<String> {
         val retrofitPosts = Retrofit.Builder()
-                .baseUrl("http://192.168.43.72:8080")
+                .baseUrl("http://10.8.7.49:8080")
                 .addConverterFactory(MoshiConverterFactory.create())
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .build()
                 .create(RetrofitPosts::class.java)
 
-        val result = retrofitPosts.postReport(params).await()
-        return Result(result.body())
+        return retrofitPosts.postReport(params).await()
     }
-
-    data class Result(val posts: String?)
 }
