@@ -1,5 +1,9 @@
 package ru.sbrf.sberwifi
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +12,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.sbrf.sberwifi.fragment.IperfFragment
 import ru.sbrf.sberwifi.fragment.ReportFragment
 import ru.sbrf.sberwifi.fragment.WiFiFragment
+import ru.sbrf.sberwifi.livemodel.scheduler.AlarmWiFiScanService
 import ru.sbrf.sberwifi.wifi.model.WiFiDetail
+import java.util.*
 
 
 @Suppress("CAST_NEVER_SUCCEEDS")
@@ -53,6 +59,10 @@ class MainActivity : AppCompatActivity(),
         currentFragmentEnum = FragmentEnum.WiFiFragment
         transaction.replace(R.id.frame_layout, currentFragment!!)
         transaction.commit()
+
+        scheduleJob()
+        /*val service = Intent(applicationContext, WiFiServiceReceiver::class.java)
+        applicationContext.startService(service)*/
     }
 
     private fun bottomNavigationInit() {
@@ -81,6 +91,20 @@ class MainActivity : AppCompatActivity(),
             transaction.commit()
             true
         }
+    }
+
+
+    private fun scheduleJob() {
+        val intent = Intent(applicationContext, AlarmWiFiScanService::class.java)
+        val alarmIntent = PendingIntent.getService(applicationContext, 0, intent, 0)
+
+        val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.SECOND, 5)
+        val afterFiveSecond = calendar.timeInMillis
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, afterFiveSecond, 60000, alarmIntent)
     }
 
     private fun replaceFragment(newFragment: Fragment, newFragmentEnum: FragmentEnum) {

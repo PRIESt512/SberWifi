@@ -26,7 +26,7 @@ enum class GroupBy private constructor(private val sortOrderComparator: Comparat
         override fun compare(lhs: WiFiDetail, rhs: WiFiDetail): Int {
             val locale = Locale.getDefault()
             return CompareToBuilder()
-                    .append(lhs.ssid.toUpperCase(locale), rhs.ssid.toUpperCase(locale))
+                    .append(lhs.SSID.toUpperCase(locale), rhs.SSID.toUpperCase(locale))
                     .append(rhs.wiFiSignal.level, lhs.wiFiSignal.level)
                     .append(lhs.bssid.toUpperCase(locale), rhs.bssid.toUpperCase(locale))
                     .toComparison()
@@ -37,7 +37,7 @@ enum class GroupBy private constructor(private val sortOrderComparator: Comparat
         override fun compare(lhs: WiFiDetail, rhs: WiFiDetail): Int {
             val locale = Locale.getDefault()
             return CompareToBuilder()
-                    .append(lhs.ssid.toUpperCase(locale), rhs.ssid.toUpperCase(locale))
+                    .append(lhs.SSID.toUpperCase(locale), rhs.SSID.toUpperCase(locale))
                     .toComparison()
         }
     }
@@ -48,7 +48,7 @@ enum class GroupBy private constructor(private val sortOrderComparator: Comparat
             return CompareToBuilder()
                     .append(lhs.wiFiSignal.primaryWiFiChannel.channel, rhs.wiFiSignal.primaryWiFiChannel.channel)
                     .append(rhs.wiFiSignal.level, lhs.wiFiSignal.level)
-                    .append(lhs.ssid.toUpperCase(locale), rhs.ssid.toUpperCase(locale))
+                    .append(lhs.SSID.toUpperCase(locale), rhs.SSID.toUpperCase(locale))
                     .append(lhs.bssid.toUpperCase(locale), rhs.bssid.toUpperCase(locale))
                     .toComparison()
         }

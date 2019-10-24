@@ -56,7 +56,7 @@ class DetailInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ssid.text = wifiDetail.SSID
+        ssid.text = wifiDetail.ssid
         mac.text = wifiDetail.bssid
 
         central_frequency.text = String.format(Locale.ENGLISH, "%d Мгц", wifiDetail.wiFiSignal.primaryFrequency)

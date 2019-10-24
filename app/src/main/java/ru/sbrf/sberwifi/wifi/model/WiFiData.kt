@@ -70,7 +70,7 @@ class WiFiData(private val wiFiDetails: List<WiFiDetail>, val wiFiConnection: Wi
     private inner class ConnectionPredicate : Predicate<WiFiDetail> {
         override fun evaluate(wiFiDetail: WiFiDetail): Boolean {
             return EqualsBuilder()
-                    .append(wiFiConnection.ssid, wiFiDetail.ssid)
+                    .append(wiFiConnection.ssid, wiFiDetail.SSID)
                     .append(wiFiConnection.bssid, wiFiDetail.bssid)
                     .isEquals
         }

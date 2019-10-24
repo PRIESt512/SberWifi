@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder
 import java.util.*
 
 @Serializable
-class WiFiDetail constructor(val SSID: String = StringUtils.EMPTY,
+class WiFiDetail constructor(val ssid: String = StringUtils.EMPTY,
                              val bssid: String,
                              val capabilities: String,
                              val wiFiSignal: WiFiSignal,
@@ -19,21 +19,21 @@ class WiFiDetail constructor(val SSID: String = StringUtils.EMPTY,
 
     val security = Security.findOne(capabilities)
 
-    val ssid: String
+    val SSID: String
         get() {
-            return if (isHidden) SSID_EMPTY else SSID
+            return if (isHidden) SSID_EMPTY else ssid
         }
 
-    val isHidden = StringUtils.isBlank(SSID)
+    val isHidden = StringUtils.isBlank(ssid)
 
     val title: String
 
     init {
         this.children = ArrayList()
-        this.title = String.format("%s (%s)", ssid, bssid)
+        this.title = String.format("%s (%s)", SSID, bssid)
     }
 
-    constructor(wiFiDetail: WiFiDetail, wiFiAdditional: WiFiAdditional) : this(wiFiDetail.SSID, wiFiDetail.bssid, wiFiDetail.capabilities, wiFiDetail.wiFiSignal, wiFiAdditional) {}
+    constructor(wiFiDetail: WiFiDetail, wiFiAdditional: WiFiAdditional) : this(wiFiDetail.ssid, wiFiDetail.bssid, wiFiDetail.capabilities, wiFiDetail.wiFiSignal, wiFiAdditional) {}
 
     fun getChildren(): List<WiFiDetail> {
         return children
@@ -55,21 +55,21 @@ class WiFiDetail constructor(val SSID: String = StringUtils.EMPTY,
         val that = o as WiFiDetail?
 
         return EqualsBuilder()
-                .append(ssid, that!!.ssid)
+                .append(SSID, that!!.SSID)
                 .append(bssid, that.bssid)
                 .isEquals
     }
 
     override fun hashCode(): Int {
         return HashCodeBuilder(17, 37)
-                .append(ssid)
+                .append(SSID)
                 .append(bssid)
                 .toHashCode()
     }
 
     override fun compareTo(another: WiFiDetail): Int {
         return CompareToBuilder()
-                .append(ssid, another.ssid)
+                .append(SSID, another.SSID)
                 .append(bssid, another.bssid)
                 .toComparison()
     }

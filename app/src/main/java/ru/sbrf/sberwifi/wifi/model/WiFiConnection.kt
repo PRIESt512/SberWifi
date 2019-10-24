@@ -25,7 +25,7 @@ class WiFiConnection(val ssid: String,
     }
 
     /* val title by lazy(LazyThreadSafetyMode.NONE) {
-         String.format("%s (%s)", ssid, bssid)
+         String.format("%s (%s)", SSID, bssid)
      }*/
 
     val title: String
