@@ -6,13 +6,18 @@
 
 IperfTest::IperfTest(const std::string &host, const int port, const Verbose verbose,
                      const Role role,
-                     JsonReport jsonReport) {
+                     JsonReport jsonReport, bool reverse) {
     test = iperf_new_test();
     iperf_defaults(test);
     iperf_set_test_server_port(test, port);
     iperf_set_verbose(test, verboseMode.at(verbose));
     iperf_set_test_role(test, role_map.at(role));
     iperf_set_test_json_output(test, json_report.at(jsonReport));
+    if (reverse) {
+        iperf_set_test_reverse(test, 1);
+    } else {
+        iperf_set_test_reverse(test, 0);
+    }
 
     if (role == Role::CLIENT) {
         if (host.empty()) {
@@ -31,7 +36,7 @@ void IperfTest::run_client() {
     if (iperf_run_client(test) < 0) {
         std::string info = "host:" +
                            std::string(test->server_hostname) + " port:" +
-                           std::to_string(test->bind_port);
+                           std::to_string(test->server_port);
         std::string error;
         std::sprintf(const_cast<char *>(error.c_str()), "%s: ошибка - %s\n", info.c_str(),
                      iperf_strerror(i_errno));

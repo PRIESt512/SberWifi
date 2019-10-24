@@ -58,6 +58,19 @@
         app:selectedColor="?attr/colorAccent"
         app:toggleMode="even" />
 
+    <!--<Switch
+        android:id="@+id/switchReverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/switch_compat"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="125dp"
+        android:checked="false"
+        android:text="Reverse"
+        android:textOff="Кошка"
+        android:textOn="Кот" />-->
+
     <com.agik.AGIKSwipeButton.View.Swipe_Button_View
         android:id="@+id/start_stop"
         android:layout_width="match_parent"

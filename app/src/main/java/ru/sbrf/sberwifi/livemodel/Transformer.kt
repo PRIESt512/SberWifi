@@ -37,7 +37,13 @@ internal class Transformer {
     fun transformToWiFiData(scanResult: List<ScanResult>, wifiInfo: WifiInfo?): WiFiData {
         val wiFiDetails = transformScanResult(scanResult)
         val wiFiConnection = transformWifiInfo(wifiInfo)
-        return WiFiData(wiFiDetails, wiFiConnection)
+        if (wiFiConnection != WiFiConnection.EMPTY) {
+            DeviceInfo.getInstance(wiFiConnection)
+        } else {
+            DeviceInfo.getInstanceWithOutIP()
+        }
+        val device = DeviceInfo.INSTANCE!!
+        return WiFiData(wiFiDetails, wiFiConnection, device)
     }
 
     fun getWiFiWidth(scanResult: ScanResult): WiFiWidth {

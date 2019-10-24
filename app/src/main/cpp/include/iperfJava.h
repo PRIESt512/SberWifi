@@ -24,7 +24,8 @@ extern "C" {
  */
 JNIEXPORT void JNICALL
 Java_ru_sbrf_sberwifi_fragment_IperfFragment_start(JNIEnv *env, jobject thisObject, jstring host,
-                                                   jint port, jint duration, jint streams);
+                                                   jint port, jint duration, jint streams,
+                                                   jboolean reverse);
 
 /**
  * Получаем абсолютный путь до директории, которую iperf будет использовать для создания временных файлов

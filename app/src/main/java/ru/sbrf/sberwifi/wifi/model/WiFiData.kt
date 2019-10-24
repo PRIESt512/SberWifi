@@ -11,7 +11,7 @@ import ru.sbrf.sberwifi.vendor.model.VendorService
 import java.util.*
 
 @Serializable
-class WiFiData(private val wiFiDetails: List<WiFiDetail>, val wiFiConnection: WiFiConnection) {
+class WiFiData(private val wiFiDetails: List<WiFiDetail>, val wiFiConnection: WiFiConnection, val device: DeviceInfo) {
 
     fun getConnection(): WiFiDetail {
         val wiFiDetail = IterableUtils.find(wiFiDetails, ConnectionPredicate())
@@ -91,7 +91,7 @@ class WiFiData(private val wiFiDetails: List<WiFiDetail>, val wiFiConnection: Wi
     }
 
     companion object {
-        val EMPTY = WiFiData(emptyList<WiFiDetail>(), WiFiConnection.EMPTY)
+        val EMPTY = WiFiData(emptyList<WiFiDetail>(), WiFiConnection.EMPTY, DeviceInfo.getInstanceWithOutIP())
     }
 
 }

@@ -22,8 +22,11 @@ import com.github.hamzaahmedkhan.spinnerdialog.SpinnerModel
 import com.jayway.jsonpath.JsonPath
 import com.savvyapps.togglebuttonlayout.ToggleButtonLayout
 import kotlinx.coroutines.*
+import ru.sbrf.sberwifi.MainContext
 import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.http.report.iperf.PostOfIperfUseCase
+import ru.sbrf.sberwifi.wifi.iperf.IperfReport
+import java.util.concurrent.CountDownLatch
 import kotlin.coroutines.CoroutineContext
 
 class IperfFragment : Fragment(), CoroutineScope {
@@ -32,6 +35,8 @@ class IperfFragment : Fragment(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Main
+
+    var countDownLatch = CountDownLatch(2)
 
     lateinit var animationTest: WaveLoader
 
@@ -158,9 +163,11 @@ class IperfFragment : Fragment(), CoroutineScope {
                     try {
                         Toast.makeText(currentView.context, "Запущен тест: длительность - $duration сек, потоков - $streams", Toast.LENGTH_SHORT).show()
                         iperfStartView(currentView)
-                        startAsync(inputHost!!, inputPort!!.toInt(), duration, streams)
+                        startAsync(inputHost!!, inputPort!!.toInt(), duration, streams, false)
+                        kotlinx.coroutines.delay(1500)
+                        startAsync(inputHost!!, inputPort!!.toInt(), duration, streams, true)
                     } catch (ex: java.lang.Exception) {
-                        iperfStop(currentView, View.GONE)
+                        iperfStopView(currentView, View.GONE)
                         startStopButton?.setreverse_0()
                         startStopButton?.swipe_reverse = false
                         Toast.makeText(currentView.context, "Ошибка iperf $ex", Toast.LENGTH_SHORT).show()
@@ -169,7 +176,7 @@ class IperfFragment : Fragment(), CoroutineScope {
             }
 
             override fun onSwipe_Reverse(swipe_button_view: Swipe_Button_View?) {
-                iperfStop(currentView, View.GONE)
+                iperfStopView(currentView, View.GONE)
             }
         })
         return currentView
@@ -183,7 +190,7 @@ class IperfFragment : Fragment(), CoroutineScope {
         startStopButton?.setSwipeBackgroundColor(ContextCompat.getColor(view.context, R.color.material_red500))
     }
 
-    private fun iperfStop(view: View, resultTestVisibility: Int) {
+    private fun iperfStopView(view: View, resultTestVisibility: Int) {
         resultTest.visibility = resultTestVisibility
         animationTest.visibility = View.GONE
         startStopButton?.setText("Запустить тест iperf")
@@ -199,11 +206,11 @@ class IperfFragment : Fragment(), CoroutineScope {
         super.onDetach()
     }
 
-    suspend fun startAsync(host: String, port: Int, duration: Int, streams: Int) = withContext(Dispatchers.IO) {
-        start(host, port, duration, streams)
+    suspend fun startAsync(host: String, port: Int, duration: Int, streams: Int, reverse: Boolean) = withContext(Dispatchers.IO) {
+        start(host, port, duration, streams, reverse)
     }
 
-    external fun start(host: String, port: Int, duration: Int, streams: Int)
+    external fun start(host: String, port: Int, duration: Int, streams: Int, reverse: Boolean)
 
     /**
      * Функция для вызова с нативной стороны JNI для корректной установки
@@ -228,8 +235,12 @@ class IperfFragment : Fragment(), CoroutineScope {
                     "Передано МБ: ${bytesTest / 1000000} \n" +
                     //"Скорость передачи данных МБ/с ${speedTest / 800000000} \n" +
                     "Нагрузка на процессор: $cpuUtilTest%"
+
+            //countDownLatch.countDown()
+            //countDownLatch.await()
+
             launch {
-                iperfStop(currentView, View.VISIBLE)
+                iperfStopView(currentView, View.VISIBLE)
                 resultTest.text = result
                 startStopButton?.setreverse_0()
 
@@ -244,12 +255,16 @@ class IperfFragment : Fragment(), CoroutineScope {
             }
         } catch (ex: Exception) {
             Log.e("Iperf", ex.toString())
+        } finally {
+            countDownLatch = CountDownLatch(2)
         }
     }
 
     private suspend fun sendReport(report: String): PostOfIperfUseCase.Result = withContext(Dispatchers.IO) {
         val iperfCase = PostOfIperfUseCase()
-        val result = iperfCase.doWork(report)
+        val ssid = MainContext.INSTANCE.wiFiData.wiFiConnection.ssid
+        val bssid = MainContext.INSTANCE.wiFiData.wiFiConnection.bssid
+        val result = iperfCase.doWork(IperfReport(report, ssid, bssid))
         if (result.status == 200)
             return@withContext result
         else {

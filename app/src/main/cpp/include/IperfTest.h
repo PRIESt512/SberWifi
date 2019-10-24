@@ -21,7 +21,8 @@
 class IperfTest {
 
 public:
-    IperfTest(const std::string &host, int port, Verbose verbose, Role role, JsonReport jsonReport);
+    IperfTest(const std::string &host, int port, Verbose verbose, Role role, JsonReport jsonReport,
+              bool reverse);
 
     ~IperfTest();
 
@@ -64,7 +65,8 @@ private:
 
     std::unordered_map<Role, char> role_map = {
             {Role::CLIENT, 'c'},
-            {Role::SERVER, 's'}
+            {Role::SERVER, 's'},
+
     };
 
     std::unordered_map<JsonReport, unsigned> json_report = {

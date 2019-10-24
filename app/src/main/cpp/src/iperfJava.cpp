@@ -31,7 +31,8 @@ Java_ru_sbrf_sberwifi_fragment_IperfFragment_initTempPath(JNIEnv *env, jobject t
 
 extern "C" JNIEXPORT void JNICALL
 Java_ru_sbrf_sberwifi_fragment_IperfFragment_start(JNIEnv *env, jobject thisObject, jstring host,
-                                                   jint port, jint duration, jint streams) {
+                                                   jint port, jint duration, jint streams,
+                                                   jboolean reverse) {
 
     const char *hostPointer = env->GetStringUTFChars(host, nullptr);
     __android_log_print(ANDROID_LOG_DEBUG, APPNAME, "Start host %s", hostPointer);
@@ -48,7 +49,8 @@ Java_ru_sbrf_sberwifi_fragment_IperfFragment_start(JNIEnv *env, jobject thisObje
         }
     }
     try {
-        IperfTest test = IperfTest(hostPointer, port, Verbose::YES, Role::CLIENT, JsonReport::YES);
+        IperfTest test = IperfTest(hostPointer, port, Verbose::YES, Role::CLIENT, JsonReport::YES,
+                                   reverse);
         test.set_duration(duration);
         test.set_num_streams(streams);
         test.run_client();

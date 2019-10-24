@@ -7,7 +7,8 @@
 
 enum class Role : unsigned {
     CLIENT,
-    SERVER
+    SERVER,
+
 };
 
 #endif //UNTITLED1_ROLEENUM_H
