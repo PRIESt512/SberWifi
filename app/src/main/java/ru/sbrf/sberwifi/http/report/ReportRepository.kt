@@ -10,9 +10,10 @@ class ReportRepository : BaseRepository<WiFiData, Response<String>>() {
 
     override suspend fun doWork(params: WiFiData): Response<String> {
         val retrofitPosts = Retrofit.Builder()
-                .baseUrl("http://172.30.14.161:80")
+                .baseUrl("https://172.30.14.161")
                 .addConverterFactory(MoshiConverterFactory.create())
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .client(UnsafeOkHttpClient.getUnsafeOkHttpClient())
                 .build()
                 .create(RetrofitPosts::class.java)
 

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -13,8 +14,14 @@ import ru.sbrf.sberwifi.fragment.IperfFragment
 import ru.sbrf.sberwifi.fragment.ReportFragment
 import ru.sbrf.sberwifi.fragment.WiFiFragment
 import ru.sbrf.sberwifi.livemodel.scheduler.AlarmWiFiScanService
+import ru.sbrf.sberwifi.util.FileUtils
 import ru.sbrf.sberwifi.wifi.model.WiFiDetail
+import java.security.KeyStore
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
 import java.util.*
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManagerFactory
 
 
 @Suppress("CAST_NEVER_SUCCEEDS")
@@ -61,8 +68,7 @@ class MainActivity : AppCompatActivity(),
         transaction.commit()
 
         scheduleJob()
-        /*val service = Intent(applicationContext, WiFiServiceReceiver::class.java)
-        applicationContext.startService(service)*/
+        setSSL()
     }
 
     private fun bottomNavigationInit() {
@@ -93,6 +99,32 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    private fun setSSL() {
+        try {
+            val cf: CertificateFactory = CertificateFactory.getInstance("X.509")
+            val caInput = FileUtils.getInputStream(resources, R.raw.team_a)
+            val ca: X509Certificate = caInput.use {
+                cf.generateCertificate(it) as X509Certificate
+            }
+
+            val keyStoreType = KeyStore.getDefaultType()
+            val keyStore = KeyStore.getInstance(keyStoreType).apply {
+                load(null, null)
+                setCertificateEntry("ca", ca)
+            }
+            val tmfAlgorithm: String = TrustManagerFactory.getDefaultAlgorithm()
+            val tmf: TrustManagerFactory = TrustManagerFactory.getInstance(tmfAlgorithm).apply {
+                init(keyStore)
+            }
+            val context: SSLContext = SSLContext.getInstance("TLS").apply {
+                init(null, tmf.trustManagers, null)
+            }
+            MainContext.INSTANCE.initSSL(context)
+            MainContext.INSTANCE.trustManager = tmf.trustManagers
+        } catch (ex: Exception) {
+            Log.e("SSL", ex.message)
+        }
+    }
 
     private fun scheduleJob() {
         val intent = Intent(applicationContext, AlarmWiFiScanService::class.java)

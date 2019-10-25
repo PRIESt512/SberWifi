@@ -8,6 +8,7 @@ import ru.sbrf.sberwifi.wifi.model.WiFiData
 
 interface RetrofitPosts {
 
+    //@Headers("Authorization: Basic UGxlc2hrYW5ldjEyMw==")
     @POST("monitoring/send")
     fun postReport(@Body body: WiFiData): Deferred<Response<String>>
 }

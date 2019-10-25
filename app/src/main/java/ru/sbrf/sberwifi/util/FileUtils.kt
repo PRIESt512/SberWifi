@@ -1,8 +1,10 @@
 package ru.sbrf.sberwifi.util
 
 import android.content.res.Resources
+import android.util.Log
 import androidx.annotation.RawRes
 import org.apache.commons.lang3.StringUtils
+import java.io.InputStream
 
 class FileUtils private constructor() {
     init {
@@ -27,6 +29,16 @@ class FileUtils private constructor() {
                 return StringUtils.EMPTY
             }
 
+        }
+
+        fun getInputStream(resources: Resources, @RawRes id: Int): InputStream? {
+            try {
+                return resources.openRawResource(id)
+            } catch (e: Exception) {
+                // file is corrupted
+                Log.e("FileUtils", e.message!!)
+            }
+            return null
         }
     }
 }

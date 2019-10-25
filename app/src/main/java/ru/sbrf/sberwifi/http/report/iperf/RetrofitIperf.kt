@@ -7,6 +7,7 @@ import retrofit2.http.POST
 
 interface RetrofitIperf {
 
+    //@Headers("Authorization: Basic UGxlc2hrYW5ldjEyMw==")
     @POST("iperf/send")
     fun postReport(@Body body: String): Deferred<Response<String>>
 }
