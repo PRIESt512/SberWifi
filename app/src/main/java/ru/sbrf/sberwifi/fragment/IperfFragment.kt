@@ -22,11 +22,15 @@ import com.github.hamzaahmedkhan.spinnerdialog.SpinnerModel
 import com.jayway.jsonpath.JsonPath
 import com.savvyapps.togglebuttonlayout.ToggleButtonLayout
 import kotlinx.coroutines.*
+import org.apache.commons.lang3.StringUtils
 import ru.sbrf.sberwifi.MainContext
 import ru.sbrf.sberwifi.R
 import ru.sbrf.sberwifi.http.report.iperf.PostOfIperfUseCase
+import ru.sbrf.sberwifi.wifi.iperf.Info
 import ru.sbrf.sberwifi.wifi.iperf.IperfReport
+import java.util.*
 import java.util.concurrent.CountDownLatch
+import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
 class IperfFragment : Fragment(), CoroutineScope {
@@ -37,6 +41,8 @@ class IperfFragment : Fragment(), CoroutineScope {
         get() = job + Dispatchers.Main
 
     var countDownLatch = CountDownLatch(2)
+
+    var uuid: UUID = UUID.randomUUID()
 
     lateinit var animationTest: WaveLoader
 
@@ -222,28 +228,50 @@ class IperfFragment : Fragment(), CoroutineScope {
         return this.context?.cacheDir?.absolutePath
     }
 
+    var count: Int = 0
+
+    var reports: MutableList<String> = ArrayList(2)
+
     /**
      * Функция для вызова с нативной стороны и передачи результатов тестирования в код Java
      */
     public fun reportCallback(report: String?) {
         try {
-            val secondsTest = JsonPath.read<Double>(report, "$.end.sum_received.seconds")
-            val bytesTest = JsonPath.read<Int>(report, "$.end.sum_received.bytes")
-            val speedTest = JsonPath.read<Double>(report, "$.end.sum_received.bits_per_second")
-            val cpuUtilTest = JsonPath.read<Double>(report, "$.end.cpu_utilization_percent.host_total")
-            val result = "Результаты тестирования: Время тестирования $secondsTest сек, \n" +
-                    "Передано МБ: ${bytesTest / 1000000} \n" +
-                    //"Скорость передачи данных МБ/с ${speedTest / 800000000} \n" +
-                    "Нагрузка на процессор: $cpuUtilTest%"
+            var secondsTest: Double = 0.0
+            var bytesTest: Int = 0
+            var speedTest: Double = 0.0
+            var cpuUtilTest: Double = 0.0
+            var result: String = StringUtils.EMPTY
+            if (count == 0) {
+                secondsTest = JsonPath.read<Double>(report, "$.end.sum_sent.seconds")
+                bytesTest = JsonPath.read<Int>(report, "$.end.sum_sent.bytes")
+                speedTest = JsonPath.read<Double>(report, "$.end.sum_sent.bits_per_second")
+                cpuUtilTest = JsonPath.read<Double>(report, "$.end.cpu_utilization_percent.host_total")
+                result = "Время тестирования $secondsTest сек, \n" +
+                        "Отправлено МБ: ${bytesTest / 1000000} \n" +
+                        //"Скорость передачи данных МБ/с ${speedTest / 800000000} \n" +
+                        "Нагрузка на процессор: $cpuUtilTest% \n"
+                reports.add(result)
+
+                count++
+            } else {
+                //secondsTest = JsonPath.read<Double>(report, "$.end.sum_sent.seconds")
+                bytesTest = JsonPath.read<Int>(report, "$.end.sum_received.bytes")
+                speedTest = JsonPath.read<Double>(report, "$.end.sum_received.bits_per_second")
+                cpuUtilTest = JsonPath.read<Double>(report, "$.end.cpu_utilization_percent.host_total")
+                result =
+                        "Принято МБ: ${bytesTest / 1000000} \n" +
+                                //"Скорость передачи данных МБ/с ${speedTest / 800000000} \n" +
+                                "Нагрузка на процессор: $cpuUtilTest% \n"
+                reports.add(result)
+
+                count++
+            }
 
             //countDownLatch.countDown()
             //countDownLatch.await()
 
             launch {
-                iperfStopView(currentView, View.VISIBLE)
-                resultTest.text = result
-                startStopButton?.setreverse_0()
-
                 if (report != null) {
                     val result = sendReport(report)
                     if (result.status == 200) {
@@ -251,6 +279,15 @@ class IperfFragment : Fragment(), CoroutineScope {
                     } else {
                         Toast.makeText(this@IperfFragment.context, "Отчет не отправлен; Статус ${result.status}", Toast.LENGTH_SHORT).show()
                     }
+                }
+                if (count == 2) {
+                    iperfStopView(currentView, View.VISIBLE)
+                    val rep = reports[0] + reports[1]
+                    resultTest.text = rep
+                    startStopButton?.setreverse_0()
+
+                    uuid = UUID.randomUUID()
+                    count = 0
                 }
             }
         } catch (ex: Exception) {
@@ -264,7 +301,8 @@ class IperfFragment : Fragment(), CoroutineScope {
         val iperfCase = PostOfIperfUseCase()
         val ssid = MainContext.INSTANCE.wiFiData.wiFiConnection.ssid
         val bssid = MainContext.INSTANCE.wiFiData.wiFiConnection.bssid
-        val result = iperfCase.doWork(IperfReport(report, ssid, bssid))
+
+        val result = iperfCase.doWork(IperfReport(Info(uuid.toString(), bssid, ssid), report).toString())
         if (result.status == 200)
             return@withContext result
         else {
