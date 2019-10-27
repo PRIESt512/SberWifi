@@ -30,6 +30,35 @@ Java_ru_sbrf_sberwifi_fragment_IperfFragment_initTempPath(JNIEnv *env, jobject t
 }
 
 extern "C" JNIEXPORT void JNICALL
+Java_ru_sbrf_sberwifi_fragment_IperfFragment_startServer(JNIEnv *env, jobject thisObject, jint port,
+                                                         jboolean reverse, jboolean daemon) {
+    jmethodID callback = nullptr;
+
+    jclass cls2 = env->GetObjectClass(thisObject);
+    if (cls2 == nullptr) {
+        __android_log_print(ANDROID_LOG_ERROR, APPNAME, "ERROR: class not found !");
+    } else {
+        callback = env->GetMethodID(cls2, "reportCallback", "(Ljava/lang/String;)V");
+        if (callback == nullptr) {
+            __android_log_print(ANDROID_LOG_ERROR, APPNAME, "ERROR: reportCallback not found !");
+            return;
+        }
+    }
+
+    try {
+        IperfTest test = IperfTest("", port, Verbose::NO, Role::SERVER, JsonReport::YES, reverse);
+        test.run_server();
+
+        test.print_statistics([=](const std::string &info) {
+            jstring out = env->NewStringUTF(info.c_str());
+            env->CallObjectMethod(thisObject, callback, out);
+        });
+    } catch (const std::exception &e) {
+        std::cout << e.what();
+    }
+}
+
+extern "C" JNIEXPORT void JNICALL
 Java_ru_sbrf_sberwifi_fragment_IperfFragment_start(JNIEnv *env, jobject thisObject, jstring host,
                                                    jint port, jint duration, jint streams,
                                                    jboolean reverse) {

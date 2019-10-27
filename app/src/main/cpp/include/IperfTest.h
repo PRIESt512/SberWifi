@@ -28,6 +28,8 @@ public:
 
     void run_client();
 
+    void run_server();
+
     /**
      * Установка ограничение первых n секунд теста
      * @param omit секунды

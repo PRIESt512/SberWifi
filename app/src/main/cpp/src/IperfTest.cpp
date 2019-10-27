@@ -44,6 +44,18 @@ void IperfTest::run_client() {
     }
 }
 
+void IperfTest::run_server() {
+    if (iperf_run_server(test) < 0) {
+        std::string info = "host:" +
+                           std::string(test->server_hostname) + " port:" +
+                           std::to_string(test->bind_port);
+        std::string error;
+        std::sprintf(const_cast<char *>(error.c_str()), "%s: ошибка - %s\n", info.c_str(),
+                     iperf_strerror(i_errno));
+        throw std::runtime_error(error);
+    }
+}
+
 void IperfTest::set_omit(int omit) {
     if (omit < 0 || omit > 60) {
         throw std::invalid_argument("Omit параметр должен быть в диапазоне от 0 до 60 не включая");

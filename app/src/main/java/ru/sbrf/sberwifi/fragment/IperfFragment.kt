@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -83,6 +84,16 @@ class IperfFragment : Fragment(), CoroutineScope {
         resultTest = currentView.findViewById(R.id.resultTest)
         resultTest.visibility = View.GONE
 
+        val switch = view?.findViewById<Switch>(R.id.switchReverse)
+
+        /*switch?.setOnClickListener { _, isChecked ->
+            if (isChecked) {
+
+            } else {
+
+            }
+        }
+*/
         inputPortText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
@@ -216,7 +227,13 @@ class IperfFragment : Fragment(), CoroutineScope {
         start(host, port, duration, streams, reverse)
     }
 
+    suspend fun startServerAsync(host: String, port: Int, duration: Int, streams: Int, reverse: Boolean) = withContext(Dispatchers.IO) {
+        startServer(host, port, duration, streams, reverse)
+    }
+
     external fun start(host: String, port: Int, duration: Int, streams: Int, reverse: Boolean)
+
+    external fun startServer(host: String, port: Int, duration: Int, streams: Int, reverse: Boolean)
 
     /**
      * Функция для вызова с нативной стороны JNI для корректной установки
